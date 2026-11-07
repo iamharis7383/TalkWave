@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TalkWave — Ride The Wave Of Conversation</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Inter',sans-serif}
+:root{
+--p:#7c3aed;--p2:#2563eb;--bg:#f4f2ff;--card:#ffffff;--text:#111827;--muted:#6b7280;
+--line:#e5e7eb;--bubble:#7c3aed;--bubble2:#2563eb;--me:#eef2ff;--header:linear-gradient(135deg,#7c3aed,#2563eb);
+--shadow:0 10px 30px rgba(124,58,237,.15)
+}
+body.dark{--bg:#0f0f1a;--card:#1a1a2e;--text:#f9fafb;--muted:#9ca3af;--line:#2e2e44;--me:#2a2a4a;--shadow:0 10px 30px rgba(0,0,0,.4)}
+body{background:var(--bg);color:var(--text);transition:.3s;overflow:hidden}
+button{cursor:pointer;border:none;outline:none;font-family:inherit}
+input,textarea,select{font-family:inherit;outline:none}
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-thumb{background:#c4b5fd;border-radius:10px}
+/* AUTH */
+#authScreen{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#7c3aed,#2563eb,#4f46e5);z-index:100;padding:16px}
+.authCard{background:#fff;width:100%;max-width:920px;border-radius:28px;overflow:hidden;display:grid;grid-template-columns:1fr 1fr;box-shadow:0 30px 80px rgba(0,0,0,.3)}
+.authLeft{background:linear-gradient(160deg,#7c3aed,#2563eb);color:#fff;padding:36px;display:flex;flex-direction:column;justify-content:space-between}
+.authLeft h1{font-size:38px;line-height:1.05;letter-spacing:-1px}
+.authLeft h1 span{color:#fde68a}
+.authLeft p{opacity:.9;margin-top:14px;line-height:1.6;font-size:15px}
+.logoRow{display:flex;align-items:center;gap:10px;font-weight:900;font-size:22px}
+.logoIcon{width:44px;height:44px;background:#fff;border-radius:14px;display:grid;place-items:center;font-size:24px}
+.pillRow{display:flex;gap:8px;flex-wrap:wrap;margin-top:20px}
+.pill{background:rgba(255,255,255,.18);padding:7px 12px;border-radius:999px;font-size:12px;font-weight:600}
+.stats{display:flex;gap:18px;margin-top:24px}
+.stat b{font-size:20px;display:block}
+.stat span{font-size:12px;opacity:.8}
+.authRight{padding:32px 30px}
+.authRight h2{font-size:26px;color:#111827}
+.authRight>p{color:#6b7280;font-size:13px;margin:6px 0 18px}
+.tabs{display:flex;background:#f3f4f6;padding:4px;border-radius:12px;margin-bottom:16px}
+.tabs button{flex:1;padding:10px;border-radius:9px;background:transparent;font-weight:700;color:#6b7280}
+.tabs button.active{background:#fff;color:#7c3aed;box-shadow:0 4px 12px rgba(0,0,0,.08)}
+.field{margin-bottom:12px}
+.field label{font-size:12px;font-weight:700;color:#374151;display:block;margin-bottom:6px}
+.field input,.field select,.field textarea{width:100%;padding:12px 14px;border:1.5px solid #e5e7eb;border-radius:12px;font-size:14px;background:#fff}
+.field input:focus{border-color:#7c3aed;box-shadow:0 0 0 3px rgba(124,58,237,.15)}
+.btnMain{width:100%;padding:13px;background:linear-gradient(135deg,#7c3aed,#2563eb);color:#fff;border-radius:12px;font-weight:800;font-size:15px;margin-top:4px}
+.btnMain:hover{opacity:.92}
+.btnGoogle{width:100%;padding:12px;background:#fff;border:1.5px solid #e5e7eb;border-radius:12px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:8px;margin-top:10px;color:#111827}
+.demoBox{background:#fef3c7;border:1px dashed #f59e0b;padding:10px 12px;border-radius:12px;font-size:12px;line-height:1.5;margin-top:12px;color:#92400e}
+.demoBox b{color:#111827}
+.rowFlex{display:flex;gap:10px}
+.rowFlex .field{flex:1}
+.hidden{display:none!important}
+/* APP LAYOUT */
+#app{display:none;height:100vh;height:100dvh}
+.appShell{display:grid;grid-template-columns:78px 340px 1fr;height:100vh;height:100dvh}
+.sidebar{background:linear-gradient(180deg,#7c3aed,#2563eb);color:#fff;display:flex;flex-direction:column;align-items:center;padding:18px 0;gap:6px}
+.sideLogo{width:48px;height:48px;background:#fff;border-radius:15px;display:grid;place-items:center;font-size:26px;margin-bottom:10px}
+.navBtn{width:56px;height:56px;border-radius:16px;background:transparent;color:#d8cfff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:11px;font-weight:700;position:relative}
+.navBtn span{font-size:20px}
+.navBtn.active{background:#fff;color:#7c3aed;box-shadow:0 8px 20px rgba(0,0,0,.2)}
+.navBtn .badge{position:absolute;top:6px;right:8px;background:#ef4444;color:#fff;font-size:10px;padding:2px 6px;border-radius:999px}
+.sideBottom{margin-top:auto;display:flex;flex-direction:column;gap:6px;align-items:center}
+.avatar{width:42px;height:42px;border-radius:50%;object-fit:cover;border:2px solid #fff;background:#ddd;display:grid;place-items:center;font-weight:800;font-size:18px;color:#fff}
+.avatar.small{width:36px;height:36px;font-size:14px}
+.avatar.lg{width:72px;height:72px;font-size:28px}
+/* MIDDLE */
+.middle{background:var(--card);border-right:1px solid var(--line);display:flex;flex-direction:column;overflow:hidden}
+.midHead{padding:18px 16px 12px;border-bottom:1px solid var(--line)}
+.midHeadTop{display:flex;justify-content:space-between;align-items:center}
+.midHeadTop h2{font-size:22px;letter-spacing:-.5px}
+.iconBtn{width:38px;height:38px;border-radius:10px;background:var(--bg);display:grid;place-items:center;font-size:18px;color:var(--text)}
+.searchBox{margin-top:12px;display:flex;align-items:center;gap:8px;background:var(--bg);padding:11px 12px;border-radius:12px;border:1px solid var(--line)}
+.searchBox input{flex:1;background:transparent;border:none;color:var(--text);font-size:14px}
+.chipRow{display:flex;gap:8px;margin-top:12px;overflow:auto;padding-bottom:2px}
+.chip{padding:7px 13px;border-radius:999px;background:var(--bg);border:1px solid var(--line);font-size:12px;font-weight:700;color:var(--muted);white-space:nowrap}
+.chip.active{background:var(--p);color:#fff;border-color:var(--p)}
+.list{flex:1;overflow:auto;padding:8px}
+.item{display:flex;gap:12px;padding:11px 10px;border-radius:14px;cursor:pointer;align-items:center}
+.item:hover,.item.active{background:var(--bg)}
+.itemInfo{flex:1;min-width:0}
+.itemTop{display:flex;justify-content:space-between;align-items:center}
+.itemTop b{font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.itemTop small{font-size:11px;color:var(--muted)}
+.itemBottom{display:flex;justify-content:space-between;align-items:center;margin-top:3px}
+.itemBottom p{font-size:12.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1}
+.unread{background:#ef4444;color:#fff;font-size:11px;font-weight:800;min-width:20px;height:20px;border-radius:999px;display:grid;place-items:center;padding:0 6px;margin-left:6px}
+.onlineDot{width:11px;height:11px;background:#22c55e;border:2px solid var(--card);border-radius:50%;position:absolute;bottom:0;right:0}
+.avatarWrap{position:relative;flex-shrink:0}
+.tick{color:#2563eb;font-size:11px}
+.empty{padding:30px 20px;text-align:center;color:var(--muted)}
+.empty span{font-size:40px;display:block;margin-bottom:10px}
+.empty b{color:var(--text);font-size:16px}
+/* CHAT AREA */
+.chatArea{display:flex;flex-direction:column;background:var(--bg);overflow:hidden;position:relative}
+.chatHeader{display:flex;align-items:center;gap:12px;padding:12px 18px;background:var(--card);border-bottom:1px solid var(--line)}
+.chatHeaderInfo{flex:1}
+.chatHeaderInfo b{font-size:15px}
+.chatHeaderInfo p{font-size:12px;color:#22c55e;font-weight:600}
+.chatHeaderInfo p.off{color:var(--muted)}
+.chatActions{display:flex;gap:8px}
+.msgs{flex:1;overflow:auto;padding:18px;display:flex;flex-direction:column;gap:10px}
+.dateSep{text-align:center}
+.dateSep span{background:var(--card);border:1px solid var(--line);font-size:11px;font-weight:700;padding:6px 12px;border-radius:999px;color:var(--muted)}
+.msg{max-width:68%;padding:11px 13px;border-radius:18px;font-size:14px;line-height:1.5;position:relative;animation:pop .2s;box-shadow:0 2px 8px rgba(0,0,0,.05)}
+@keyframes pop{from{transform:scale(.96);opacity:0}to{transform:scale(1);opacity:1}}
+.msg.me{align-self:flex-end;background:linear-gradient(135deg,#7c3aed,#2563eb);color:#fff;border-bottom-right-radius:6px}
+.msg.other{align-self:flex-start;background:var(--card);color:var(--text);border-bottom-left-radius:6px;border:1px solid var(--line)}
+.msg small{display:block;font-size:10px;opacity:.7;margin-top:5px;text-align:right}
+.msg .replyBox{background:rgba(255,255,255,.18);padding:7px 9px;border-radius:8px;font-size:12px;margin-bottom:6px;border-left:3px solid #fde68a}
+.msg.other .replyBox{background:var(--bg);color:var(--muted)}
+.msgImg{width:100%;max-width:260px;border-radius:12px;margin-bottom:6px;display:block}
+.msgActions{display:none;gap:6px;margin-top:6px}
+.msg:hover .msgActions{display:flex}
+.miniBtn{font-size:11px;font-weight:700;padding:5px 9px;border-radius:999px;background:rgba(0,0,0,.12);color:inherit}
+.msg.other .miniBtn{background:var(--bg);color:var(--text)}
+.composer{padding:12px 16px;background:var(--card);border-top:1px solid var(--line)}
+.composerRow{display:flex;align-items:center;gap:8px;background:var(--bg);border:1px solid var(--line);border-radius:999px;padding:6px 6px 6px 14px}
+.composerRow input{flex:1;background:transparent;border:none;font-size:14px;color:var(--text);padding:8px 0}
+.sendBtn{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#7c3aed,#2563eb);color:#fff;font-size:18px;display:grid;place-items:center;flex-shrink:0}
+.typing{font-size:12px;color:var(--muted);padding:0 18px 6px;display:none}
+.typing i{color:#7c3aed;font-weight:700}
+.welcome{flex:1;display:grid;place-items:center;text-align:center;padding:20px}
+.welcomeCard{max-width:520px;background:var(--card);padding:32px;border-radius:24px;box-shadow:var(--shadow);border:1px solid var(--line)}
+.welcomeCard h1{font-size:30px;margin:14px 0 8px}
+.welcomeCard p{color:var(--muted);line-height:1.6;font-size:14px}
+.welcomeBtns{display:flex;gap:10px;justify-content:center;margin-top:18px;flex-wrap:wrap}
+.btnPill{padding:11px 18px;border-radius:999px;font-weight:800;font-size:13px;background:linear-gradient(135deg,#7c3aed,#2563eb);color:#fff}
+.btnGhost{padding:11px 18px;border-radius:999px;font-weight:800;font-size:13px;background:var(--bg);color:var(--text);border:1px solid var(--line)}
+/* PROFILE PANEL */
+.panel{padding:16px;overflow:auto}
+.profileCard{background:var(--bg);border:1px solid var(--line);border-radius:18px;padding:20px;text-align:center}
+.profileCard h3{margin-top:10px}
+.profileCard p{color:var(--muted);font-size:13px;margin-top:4px}
+.settingItem{display:flex;align-items:center;gap:12px;padding:13px 12px;border:1px solid var(--line);border-radius:14px;margin-top:10px;background:var(--card);cursor:pointer}
+.settingItem:hover{border-color:#c4b5fd}
+.settingItem b{font-size:14px;display:block}
+.settingItem small{color:var(--muted);font-size:12px}
+.settingItem .arrow{margin-left:auto;color:var(--muted)}
+.switch{width:44px;height:24px;background:#d1d5db;border-radius:999px;position:relative;flex-shrink:0;transition:.2s}
+.switch:after{content:"";position:absolute;width:18px;height:18px;background:#fff;border-radius:50%;top:3px;left:3px;transition:.2s;box-shadow:0 2px 5px rgba(0,0,0,.2)}
+.switch.on{background:#7c3aed}
+.switch.on:after{left:23px}
+/* MODAL */
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.55);display:none;align-items:center;justify-content:center;z-index:200;padding:16px}
+.modal.open{display:flex}
+.modalBox{background:var(--card);width:100%;max-width:440px;border-radius:22px;overflow:hidden;max-height:90vh;display:flex;flex-direction:column}
+.modalHead{padding:18px 18px 12px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line)}
+.modalHead h3{font-size:18px}
+.modalBody{padding:16px;overflow:auto}
+.closeBtn{width:32px;height:32px;border-radius:50%;background:var(--bg);font-size:16px}
+.contactRow{display:flex;gap:10px;align-items:center;padding:10px;border-radius:12px;cursor:pointer;border:1px solid transparent}
+.contactRow:hover{background:var(--bg)}
+.contactRow.selected{border-color:#7c3aed;background:#f5f3ff}
+body.dark .contactRow.selected{background:#2a2a4a}
+.check{margin-left:auto;width:22px;height:22px;border-radius:50%;border:2px solid var(--line);display:grid;place-items:center;font-size:12px}
+.contactRow.selected .check{background:#7c3aed;border-color:#7c3aed;color:#fff}
+/* CALL */
+.callScreen{position:fixed;inset:0;background:linear-gradient(160deg,#1e1b4b,#312e81);color:#fff;display:none;flex-direction:column;align-items:center;justify-content:center;z-index:300;text-align:center;padding:20px}
+.callScreen.open{display:flex}
+.callAvatar{width:120px;height:120px;border-radius:50%;object-fit:cover;border:4px solid rgba(255,255,255,.3);display:grid;place-items:center;font-size:48px;font-weight:900;background:linear-gradient(135deg,#7c3aed,#2563eb)}
+.callBtns{display:flex;gap:14px;margin-top:32px}
+.callBtn{width:62px;height:62px;border-radius:50%;font-size:22px;display:grid;place-items:center;color:#fff;background:rgba(255,255,255,.18)}
+.callBtn.red{background:#ef4444;width:72px;height:72px}
+.callBtn.active{background:#fff;color:#111827}
+/* STATUS VIEWER */
+.statusViewer{position:fixed;inset:0;background:#000;display:none;z-index:300;flex-direction:column;color:#fff}
+.statusViewer.open{display:flex}
+.statusTop{padding:16px;display:flex;gap:10px;align-items:center}
+.progress{height:4px;background:rgba(255,255,255,.25);border-radius:999px;overflow:hidden;flex:1}
+.progress i{display:block;height:100%;background:#fff;width:0%}
+.statusImg{flex:1;display:grid;place-items:center;font-size:90px;padding:20px;text-align:center}
+.statusImg h2{font-size:28px;line-height:1.3}
+.statusBottom{padding:16px;display:flex;gap:10px}
+.statusBottom input{flex:1;padding:12px;border-radius:999px;border:none;background:rgba(255,255,255,.15);color:#fff}
+.statusBottom input::placeholder{color:#ddd}
+/* TOAST */
+#toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(80px);background:#111827;color:#fff;padding:12px 18px;border-radius:999px;font-size:13px;font-weight:700;z-index:500;transition:.3s;box-shadow:0 10px 30px rgba(0,0,0,.3);max-width:90vw;text-align:center}
+#toast.show{transform:translateX(-50%) translateY(0)}
+/* RESPONSIVE */
+@media(max-width:900px){
+.authCard{grid-template-columns:1fr}
+.authLeft{display:none}
+.appShell{grid-template-columns:64px 1fr}
+.chatArea{display:none}
+.chatArea.open{display:flex;position:fixed;inset:0;z-index:100;background:var(--bg)}
+.backBtn{display:grid!important}
+}
+@media(max-width:640px){
+.appShell{grid-template-columns:1fr}
+.sidebar{position:fixed;bottom:0;left:0;right:0;flex-direction:row;justify-content:space-around;padding:8px;z-index:50;height:64px}
+.sideLogo,.sideBottom{display:none}
+.middle{padding-bottom:64px}
+.midHead{padding-top:12px}
+}
+.backBtn{display:none}
+.emojiRow{display:flex;gap:6px;overflow:auto;padding:8px 0}
+.emojiRow button{font-size:20px;background:var(--bg);width:38px;height:38px;border-radius:10px;flex-shrink:0}
+</style>
+</head>
+<body>
+
+<!-- AUTH -->
+<div id="authScreen">
+<div class="authCard">
+<div class="authLeft">
+<div>
+<div class="logoRow"><div class="logoIcon">💬</div> TalkWave</div>
+<h1>Ride The <span>Wave</span> Of Conversation</h1>
+<p>Connect instantly with chat, voice and video. Secure, fast and seamless for teams and friends.</p>
+<div class="pillRow"><span class="pill">✓ End-to-End Encrypted</span><span class="pill">✓ No Ads</span><span class="pill">✓ Free To Use</span></div>
+</div>
+<div class="stats">
+<div class="stat"><b>2M+</b><span>Users</span></div>
+<div class="stat"><b>4.9 ★</b><span>Rating</span></div>
+<div class="stat"><b>120+</b><span>Countries</span></div>
+</div>
+</div>
+<div class="authRight">
+<h2 id="authTitle">Welcome back 👋</h2>
+<p id="authSub">Login to continue your conversations on TalkWave.</p>
+<div class="tabs">
+<button id="tabLogin" class="active" onclick="switchAuth('login')">Login</button>
+<button id="tabSignup" onclick="switchAuth('signup')">Sign Up</button>
+</div>
+<div id="signupFields" class="hidden">
+<div class="field"><label>Full Name</label><input id="regName" placeholder="e.g. Ahmed Khan"></div>
+</div>
+<div class="field"><label>Phone Number</label><input id="authPhone" placeholder="0300 1234567" value="03001234567"></div>
+<div class="field"><label>Password</label><input id="authPass" type="password" placeholder="••••••••" value="123456"></div>
+<div id="otpBox" class="field hidden"><label>OTP Code (Demo: 1234)</label><input id="otpInput" placeholder="Enter 1234" maxlength="4"></div>
+<button class="btnMain" onclick="handleAuth()" id="authBtn">Login to TalkWave →</button>
+<button class="btnGoogle" onclick="googleLogin()">🟢 Continue with Google</button>
+<div class="demoBox"><b>Demo Login:</b><br>Phone: 03001234567 • Pass: 123456<br>OTP: <b>1234</b> — Click Login, then OTP likho.</div>
+<p style="text-align:center;font-size:12px;color:#9ca3af;margin-top:12px">By continuing you agree to Privacy & Terms.</p>
+</div>
+</div>
+</div>
+
+<!-- APP -->
+<div id="app">
+<div class="appShell">
+<!-- SIDEBAR -->
+<nav class="sidebar">
+<div class="sideLogo">💬</div>
+<button class="navBtn active" data-nav="chats" onclick="setTab('chats',this)"><span>💬</span>Chats<b class="badge" id="totalUnread">3</b></button>
+<button class="navBtn" data-nav="calls" onclick="setTab('calls',this)"><span>📞</span>Calls</button>
+<button class="navBtn" data-nav="groups" onclick="setTab('groups',this)"><span>👥</span>Groups</button>
+<button class="navBtn" data-nav="status" onclick="setTab('status',this)"><span>🟣</span>Status</button>
+<button class="navBtn" data-nav="profile" onclick="setTab('profile',this)"><span>👤</span>Profile</button>
+<div class="sideBottom">
+<button class="iconBtn" style="background:rgba(255,255,255,.2);color:#fff" onclick="toggleDark()">🌙</button>
+<div class="avatar" id="sideAvatar" onclick="setTab('profile',document.querySelector('[data-nav=profile]'))">A</div>
+</div>
+</nav>
+
+<!-- MIDDLE -->
+<aside class="middle">
+<div class="midHead">
+<div class="midHeadTop">
+<h2 id="midTitle">Chats</h2>
+<div style="display:flex;gap:8px">
+<button class="iconBtn" onclick="openModal('newChatModal')">＋</button>
+<button class="iconBtn" onclick="toggleDark()">🌙</button>
+</div>
+</div>
+<div class="searchBox">🔍 <input id="searchInput" placeholder="Search chats, groups, contacts..." oninput="renderList()"></div>
+<div class="chipRow" id="chipRow">
+<button class="chip active" onclick="setFilter('all',this)">All</button>
+<button class="chip" onclick="setFilter('unread',this)">Unread</button>
+<button class="chip" onclick="setFilter('groups',this)">Groups</button>
+<button class="chip" onclick="setFilter('online',this)">Online</button>
+</div>
+</div>
+<div class="list" id="mainList"></div>
+<div style="padding:12px;border-top:1px solid var(--line);display:flex;gap:8px">
+<button class="btnPill" style="flex:1" onclick="openModal('newChatModal')">＋ New Chat</button>
+<button class="btnGhost" style="flex:1" onclick="openModal('newGroupModal')">👥 New Group</button>
+</div>
+</aside>
+
+<!-- CHAT AREA -->
+<main class="chatArea" id="chatArea">
+<div class="welcome" id="welcomePane">
+<div class="welcomeCard">
+<div style="font-size:60px">🌊💬</div>
+<h1>Welcome to TalkWave</h1>
+<p>Select any chat to start messaging. Send text, emoji, images, voice notes. Create groups, make calls, share status — all in one place.</p>
+<div class="welcomeBtns">
+<button class="btnPill" onclick="openModal('newChatModal')">＋ Start New Chat</button>
+<button class="btnGhost" onclick="openModal('newGroupModal')">👥 Create Group</button>
+<button class="btnGhost" onclick="setTab('status',document.querySelector('[data-nav=status]'))">View Status</button>
+</div>
+<p style="margin-top:16px;font-size:12px">🔒 End-to-end encrypted • Your data saved in LocalStorage</p>
+</div>
+</div>
+
+<div id="chatPane" class="hidden" style="display:flex;flex-direction:column;height:100%">
+<div class="chatHeader">
+<button class="iconBtn backBtn" onclick="closeChat()">←</button>
+<div class="avatarWrap"><div class="avatar" id="chatAvatar">S</div><div class="onlineDot" id="chatOnline"></div></div>
+<div class="chatHeaderInfo"><b id="chatName">Sarah</b><p id="chatStatus">Online • Active now</p></div>
+<div class="chatActions">
+<button class="iconBtn" onclick="startCall('voice')">📞</button>
+<button class="iconBtn" onclick="startCall('video')">📹</button>
+<button class="iconBtn" onclick="toggleChatMenu()">⋮</button>
+</div>
+</div>
+<div id="chatMenu" class="hidden" style="background:var(--card);border-bottom:1px solid var(--line);padding:10px 16px;display:flex;gap:8px;flex-wrap:wrap">
+<button class="chip" onclick="clearChat()">🗑 Clear Chat</button>
+<button class="chip" onclick="muteChat()">🔕 Mute</button>
+<button class="chip" onclick="blockChat()">🚫 Block</button>
+<button class="chip" onclick="deleteChat()">❌ Delete Chat</button>
+<button class="chip" onclick="exportChat()">📤 Export</button>
+</div>
+<div class="msgs" id="msgsBox"></div>
+<div class="typing" id="typingBox"><i id="typingName">Sarah</i> is typing...</div>
+<div class="composer">
+<div class="composerRow">
+<button class="iconBtn" style="background:transparent" onclick="toggleEmoji()">😊</button>
+<input id="msgInput" placeholder="Type a message..." onkeydown="if(event.key==='Enter') sendMessage()">
+<button class="iconBtn" style="background:transparent" onclick="sendImage()">🖼️</button>
+<button class="iconBtn" style="background:transparent" onclick="sendVoice()">🎤</button>
+<button class="sendBtn" onclick="sendMessage()">➤</button>
+</div>
+<div class="emojiRow hidden" id="emojiRow">
+<button onclick="addEmoji('😂')">😂</button><button onclick="addEmoji('❤️')">❤️</button><button onclick="addEmoji('🔥')">🔥</button><button onclick="addEmoji('👍')">👍</button><button onclick="addEmoji('😍')">😍</button><button onclick="addEmoji('🙏')">🙏</button><button onclick="addEmoji('🎉')">🎉</button><button onclick="addEmoji('😭')">😭</button><button onclick="addEmoji('👏')">👏</button><button onclick="addEmoji('🌊')">🌊</button><button onclick="addEmoji('💬')">💬</button><button onclick="addEmoji('😎')">😎</button>
+</div>
+</div>
+</div>
+
+<!-- PROFILE PANE INSIDE CHAT AREA -->
+<div id="profilePane" class="hidden" style="flex:1;overflow:auto">
+<div class="panel">
+<div class="profileCard">
+<div class="avatar lg" id="profileAvatarBig" style="margin:0 auto">A</div>
+<h3 id="profileNameBig">Ahmed Khan</h3>
+<p id="profileBioBig">Ride the wave 🌊 | Available</p>
+<p id="profilePhoneBig">0300 1234567</p>
+<div style="display:flex;gap:8px;justify-content:center;margin-top:14px">
+<button class="btnPill" onclick="openModal('editProfileModal')">✏️ Edit Profile</button>
+<button class="btnGhost" onclick="changeAvatar()">🖼️ Change Photo</button>
+</div>
+</div>
+<div style="margin-top:18px"><b>Settings</b></div>
+<div class="settingItem" onclick="toggleDark()"><span style="font-size:20px">🌙</span><div><b>Dark Mode</b><small>Switch theme</small></div><div class="switch" id="darkSwitch"></div></div>
+<div class="settingItem" onclick="toggleSetting(this,'Notifications')"><span style="font-size:20px">🔔</span><div><b>Notifications</b><small>Message alerts on/off</small></div><div class="switch on"></div></div>
+<div class="settingItem" onclick="toggleSetting(this,'Sounds')"><span style="font-size:20px">🔊</span><div><b>Sounds</b><small>Chat sounds</small></div><div class="switch on"></div></div>
+<div class="settingItem" onclick="openModal('wallpaperModal')"><span style="font-size:20px">🎨</span><div><b>Chat Wallpaper</b><small>Change background</small></div><span class="arrow">›</span></div>
+<div class="settingItem" onclick="openModal('privacyModal')"><span style="font-size:20px">🔒</span><div><b>Privacy</b><small>Last seen, Blocked, Read receipts</small></div><span class="arrow">›</span></div>
+<div class="settingItem" onclick="showStorage()"><span style="font-size:20px">💾</span><div><b>Storage</b><small id="storageInfo">LocalStorage • 0 KB</small></div><span class="arrow">›</span></div>
+<div class="settingItem" onclick="openModal('aboutModal')"><span style="font-size:20px">ℹ️</span><div><b>About TalkWave</b><small>Version 2.0 • Made with ❤️</small></div><span class="arrow">›</span></div>
+<div class="settingItem" style="border-color:#fecaca" onclick="logout()"><span style="font-size:20px">🚪</span><div><b style="color:#ef4444">Logout</b><small>Sign out from TalkWave</small></div><span class="arrow">›</span></div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</div>
+
+<!-- MODALS -->
+<div class="modal" id="newChatModal"><div class="modalBox"><div class="modalHead"><h3>💬 New Chat</h3><button class="closeBtn" onclick="closeModal('newChatModal')">✕</button></div><div class="modalBody"><div class="field"><label>Search Contact</label><input id="newChatSearch" placeholder="Type name..." oninput="renderNewChatList()"></div><div id="newChatList"></div></div></div></div>
+<div class="modal" id="newGroupModal"><div class="modalBox"><div class="modalHead"><h3>👥 New Group</h3><button class="closeBtn" onclick="closeModal('newGroupModal')">✕</button></div><div class="modalBody"><div class="field"><label>Group Name</label><input id="groupName" placeholder="e.g. Family Group"></div><div class="field"><label>Select Members</label></div><div id="groupMembers"></div><button class="btnMain" onclick="createGroup()">Create Group →</button></div></div></div>
+<div class="modal" id="newStatusModal"><div class="modalBox"><div class="modalHead"><h3>🟣 Add Status</h3><button class="closeBtn" onclick="closeModal('newStatusModal')">✕</button></div><div class="modalBody"><div class="field"><label>Your Status Text / Emoji</label><input id="statusText" placeholder="e.g. Having a great day 🌊"></div><div class="emojiRow"><button onclick="document.getElementById('statusText').value+=' 🌊'">🌊</button><button onclick="document.getElementById('statusText').value+=' ❤️'">❤️</button><button onclick="document.getElementById('statusText').value+=' 🔥'">🔥</button><button onclick="document.getElementById('statusText').value+=' 😂'">😂</button></div><button class="btnMain" onclick="addStatus()">Post Status</button></div></div></div>
+<div class="modal" id="editProfileModal"><div class="modalBox"><div class="modalHead"><h3>✏️ Edit Profile</h3><button class="closeBtn" onclick="closeModal('editProfileModal')">✕</button></div><div class="modalBody"><div class="field"><label>Name</label><input id="editName"></div><div class="field"><label>Bio</label><input id="editBio"></div><div class="field"><label>Phone</label><input id="editPhone"></div><button class="btnMain" onclick="saveProfile()">Save Profile</button></div></div></div>
+<div class="modal" id="wallpaperModal"><div class="modalBox"><div class="modalHead"><h3>🎨 Chat Wallpaper</h3><button class="closeBtn" onclick="closeModal('wallpaperModal')">✕</button></div><div class="modalBody"><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px"><div onclick="setWallpaper('#f4f2ff')" style="height:90px;background:#f4f2ff;border-radius:12px;border:2px solid #ddd;cursor:pointer;display:grid;place-items:center">Light</div><div onclick="setWallpaper('#0f0f1a')" style="height:90px;background:#0f0f1a;border-radius:12px;cursor:pointer;color:#fff;display:grid;place-items:center">Dark</div><div onclick="setWallpaper('linear-gradient(135deg,#7c3aed,#2563eb)')" style="height:90px;background:linear-gradient(135deg,#7c3aed,#2563eb);border-radius:12px;cursor:pointer;color:#fff;display:grid;place-items:center">Wave</div><div onclick="setWallpaper('#fef3c7')" style="height:90px;background:#fef3c7;border-radius:12px;cursor:pointer;display:grid;place-items:center">Warm</div><div onclick="setWallpaper('#dcfce7')" style="height:90px;background:#dcfce7;border-radius:12px;cursor:pointer;display:grid;place-items:center">Mint</div><div onclick="setWallpaper('#ffe4e6')" style="height:90px;background:#ffe4e6;border-radius:12px;cursor:pointer;display:grid;place-items:center">Pink</div></div></div></div></div>
+<div class="modal" id="privacyModal"><div class="modalBox"><div class="modalHead"><h3>🔒 Privacy</h3><button class="closeBtn" onclick="closeModal('privacyModal')">✕</button></div><div class="modalBody"><div class="settingItem" onclick="toggleSetting(this,'Last Seen')"><div><b>Last Seen</b><small>Everyone</small></div><div class="switch on"></div></div><div class="settingItem" onclick="toggleSetting(this,'Read Receipts')"><div><b>Read Receipts</b><small>Blue ticks</small></div><div class="switch on"></div></div><div class="settingItem" onclick="toggleSetting(this,'Profile Photo')"><div><b>Profile Photo</b><small>Everyone</small></div><div class="switch on"></div></div><p style="font-size:12px;color:var(--muted);margin-top:10px">Your privacy settings are saved locally. Firebase add karne ke baad ye server se sync honge.</p></div></div></div>
+<div class="modal" id="aboutModal"><div class="modalBox"><div class="modalHead"><h3>About TalkWave</h3><button class="closeBtn" onclick="closeModal('aboutModal')">✕</button></div><div class="modalBody" style="text-align:center"><div style="font-size:50px">🌊💬</div><h2>TalkWave v2.0</h2><p style="color:var(--muted);margin-top:8px;line-height:1.6">Ride The Wave Of Conversation<br>Single HTML File • LocalStorage • No Server Needed<br><br>Made for learning + real project.<br>Firebase baad me add kar sakte ho.</p><button class="btnMain" onclick="closeModal('aboutModal')">Awesome! 🔥</button></div></div></div>
+
+<!-- CALL SCREEN -->
+<div class="callScreen" id="callScreen">
+<div class="callAvatar" id="callAvatar">S</div>
+<h2 id="callName" style="margin-top:16px;font-size:26px">Sarah Khan</h2>
+<p id="callType" style="opacity:.8;margin-top:4px">Voice Call...</p>
+<h1 id="callTimer" style="margin-top:16px;font-size:42px;letter-spacing:1px">00:00</h1>
+<div class="callBtns">
+<button class="callBtn" id="muteBtn" onclick="toggleMute()">🎤</button>
+<button class="callBtn" id="videoBtn" onclick="toggleVideo()">📹</button>
+<button class="callBtn" onclick="toggleSpeaker()">🔊</button>
+<button class="callBtn red" onclick="endCall()">📞</button>
+</div>
+<p style="margin-top:16px;opacity:.7;font-size:13px">TalkWave Call • Encrypted</p>
+</div>
+
+<!-- STATUS VIEWER -->
+<div class="statusViewer" id="statusViewer">
+<div class="statusTop">
+<div class="avatar" id="viewerAvatar">S</div>
+<div style="flex:1"><b id="viewerName">Sarah</b><div style="font-size:12px;opacity:.7" id="viewerTime">Just now</div></div>
+<button class="closeBtn" style="background:rgba(255,255,255,.2);color:#fff" onclick="closeStatusViewer()">✕</button>
+</div>
+<div style="padding:0 16px"><div class="progress"><i id="statusProgress"></i></div></div>
+<div class="statusImg"><div><div id="viewerEmoji" style="font-size:80px">🌊</div><h2 id="viewerText">Having a great day!</h2><p id="viewerViews" style="font-size:14px;opacity:.7;margin-top:10px">👁 24 views</p></div></div>
+<div class="statusBottom"><input id="statusReply" placeholder="Reply to status..."><button class="btnPill" onclick="replyStatus()">Send</button></div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+let state = JSON.parse(localStorage.getItem('talkwave_v2')||'null');
+let currentUser = JSON.parse(localStorage.getItem('talkwave_user')||'null');
+let currentChatId = null;
+let currentTab = 'chats';
+let currentFilter = 'all';
+let callInterval = null, callSec = 0, isMuted=false, isVideo=false;
+let statusTimer = null;
+let selectedGroupMembers = new Set();
+
+const defaultContacts = [
+{id:'c1',name:'Sarah Khan',phone:'03001112222',color:'#ec4899',emoji:'👩',online:true,last:'Hey! TalkWave is amazing 🔥',time:'10:24 AM',unread:2},
+{id:'c2',name:'Ahmed Raza',phone:'03003334444',color:'#2563eb',emoji:'👨',online:true,last:'Bro match dekh raha hai?',time:'09:15 AM',unread:1},
+{id:'c3',name:'Ayesha Malik',phone:'03005556666',color:'#f59e0b',emoji:'👧',online:false,last:'Assignment bhej diya ✅',time:'Yesterday',unread:0},
+{id:'c4',name:'Bilal Khan',phone:'03007778888',color:'#10b981',emoji:'🧑',online:false,last:'Voice note suna?',time:'Yesterday',unread:0},
+{id:'c5',name:'Fatima Noor',phone:'03009990000',color:'#8b5cf6',emoji:'👩',online:true,last:'Photo dekh 😍',time:'Mon',unread:0},
+{id:'c6',name:'Usman Ali',phone:'03001231234',color:'#ef4444',emoji:'👦',online:false,last:'Kal milte hain',time:'Sun',unread:0},
+];
+const defaultGroups = [
+{id:'g1',name:'Family Group 👨‍👩‍👧',color:'#f59e0b',emoji:'👨‍👩‍👧',members:6,last:'Ammi: Khana kha liya?',time:'11:00 AM',unread:5},
+{id:'g2',name:'Coding Squad 💻',color:'#2563eb',emoji:'💻',members:8,last:'Ahmed: Code ho gaya 🔥',time:'10:00 AM',unread:2},
+{id:'g3',name:'University Friends 🎓',color:'#10b981',emoji:'🎓',members:12,last:'Ayesha: Exam kab hai?',time:'Yesterday',unread:0},
+];
+const defaultCalls = [
+{id:'call1',name:'Sarah Khan',type:'missed',color:'#ec4899',emoji:'👩',time:'Today, 10:23 AM'},
+{id:'call2',name:'Ahmed Raza',type:'outgoing',color:'#2563eb',emoji:'👨',time:'Today, 09:15 AM'},
+{id:'call3',name:'Bilal Khan',type:'incoming',color:'#10b981',emoji:'🧑',time:'Yesterday, 7:42 PM'},
+{id:'call4',name:'Fatima Noor',type:'missed',color:'#8b5cf6',emoji:'👩',time:'Yesterday, 3:10 PM'},
+];
+const defaultStatus = [
+{id:'s1',name:'Sarah Khan',emoji:'🌊',text:'Beach day was amazing! 🌊☀️',time:'Just now',views:24,color:'#ec4899',av:'👩'},
+{id:'s2',name:'Ahmed Raza',emoji:'🔥',text:'New project launch 🔥',time:'15m ago',views:12,color:'#2563eb',av:'👨'},
+{id:'s3',name:'Ayesha Malik',emoji:'📚',text:'Study mode ON 📚',time:'1h ago',views:8,color:'#f59e0b',av:'👧'},
+{id:'s4',name:'Bilal Khan',emoji:'🎮',text:'Gaming night 🎮',time:'3h ago',views:5,color:'#10b981',av:'🧑'},
+];
+
+if(!state){
+state={contacts:defaultContacts,groups:defaultGroups,calls:defaultCalls,status:defaultStatus,messages:{},blocked:[],muted:[]};
+state.messages['c1']=[{from:'other',text:'Hey! TalkWave kaisa laga?',time:'10:20 AM'},{from:'me',text:'Bro literally 100/10 hai 🔥',time:'10:22 AM'},{from:'other',text:'Haan design to next level hai 🌊',time:'10:24 AM'}];
+state.messages['c2']=[{from:'other',text:'Bro match dekh raha hai?',time:'09:10 AM'},{from:'me',text:'Haan bro, last over hai!',time:'09:12 AM'}];
+state.messages['g1']=[{from:'other',text:'Ammi: Khana kha liya?',time:'11:00 AM',sender:'Ammi'},{from:'me',text:'Ji Ammi kha liya ❤️',time:'11:02 AM'}];
+state.messages['g2']=[{from:'other',text:'Ahmed: Code ho gaya 🔥',time:'10:00 AM',sender:'Ahmed'}];
+saveState();
+}
+function saveState(){localStorage.setItem('talkwave_v2',JSON.stringify(state));updateStorageInfo();}
+function saveUser(){localStorage.setItem('talkwave_user',JSON.stringify(currentUser));}
+function toast(m){let t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500);}
+function updateStorageInfo(){let s=JSON.stringify(state).length;let el=document.getElementById('storageInfo');if(el) el.textContent='LocalStorage • '+(s/1024).toFixed(1)+' KB • '+Object.keys(state.messages).length+' chats';}
+function switchAuth(mode){
+document.getElementById('tabLogin').classList.toggle('active',mode==='login');
+document.getElementById('tabSignup').classList.toggle('active',mode==='signup');
+document.getElementById('signupFields').classList.toggle('hidden',mode!=='signup');
+document.getElementById('authTitle').textContent=mode==='login'?'Welcome back 👋':'Create Account ✨';
+document.getElementById('authSub').textContent=mode==='login'?'Login to continue your conversations.':'Join TalkWave in 10 seconds.';
+document.getElementById('authBtn').textContent=mode==='login'?'Login to TalkWave →':'Create Account →';
+document.getElementById('otpBox').classList.add('hidden');
+}
+function handleAuth(){
+let phone=document.getElementById('authPhone').value.trim();
+let pass=document.getElementById('authPass').value.trim();
+let isSignup=document.getElementById('tabSignup').classList.contains('active');
+if(!phone||!pass){toast('⚠️ Phone aur Password likho');return;}
+if(!document.getElementById('otpBox').classList.contains('hidden')){
+let otp=document.getElementById('otpInput').value;
+if(otp!=='1234'){toast('❌ Wrong OTP! Demo OTP is 1234');return;}
+finishLogin(phone);return;
+}
+if(isSignup){
+let name=document.getElementById('regName').value.trim()||'New User';
+currentUser={name,phone,pass,bio:'Ride the wave 🌊 | Available',avatar: name[0].toUpperCase()};
+saveUser();toast('✅ Account ban gaya! Welcome '+name);finishLogin(phone);return;
+}
+// login
+if(document.getElementById('otpBox').classList.contains('hidden')){
+document.getElementById('otpBox').classList.remove('hidden');
+document.getElementById('authBtn').textContent='Verify OTP →';
+toast('📩 OTP bheja gaya: 1234 (Demo)');
+return;
+}
+}
+function finishLogin(phone){
+if(!currentUser){currentUser={name:'Ahmed Khan',phone,bio:'Ride the wave 🌊 | Available',avatar:'A'};saveUser();}
+document.getElementById('authScreen').style.display='none';
+document.getElementById('app').style.display='block';
+applyUserToUI();setTab('chats',document.querySelector('[data-nav=chats]'));toast('🎉 Welcome to TalkWave, '+currentUser.name+'!');
+}
+function googleLogin(){currentUser={name:'Google User',phone:'03001234567',bio:'Logged in with Google 🌊',avatar:'G'};saveUser();finishLogin('03001234567');}
+function applyUserToUI(){
+if(!currentUser) return;
+document.getElementById('sideAvatar').textContent=currentUser.avatar||currentUser.name[0];
+document.getElementById('sideAvatar').style.background='linear-gradient(135deg,#f59e0b,#ef4444)';
+document.getElementById('profileAvatarBig').textContent=currentUser.avatar||'A';
+document.getElementById('profileNameBig').textContent=currentUser.name;
+document.getElementById('profileBioBig').textContent=currentUser.bio;
+document.getElementById('profilePhoneBig').textContent=currentUser.phone;
+document.getElementById('editName').value=currentUser.name;
+document.getElementById('editBio').value=currentUser.bio;
+document.getElementById('editPhone').value=currentUser.phone;
+}
+function logout(){if(confirm('Logout karna hai?')){localStorage.removeItem('talkwave_user');currentUser=null;document.getElementById('app').style.display='none';document.getElementById('authScreen').style.display='flex';toast('Logged out');}}
+function setTab(tab,btn){
+currentTab=tab;
+document.querySelectorAll('.navBtn').forEach(b=>b.classList.remove('active'));
+if(btn) btn.classList.add('active');
+document.getElementById('chatArea').classList.remove('open');
+if(tab==='profile'){
+document.getElementById('welcomePane').classList.add('hidden');
+document.getElementById('chatPane').classList.add('hidden');
+document.getElementById('profilePane').classList.remove('hidden');
+document.getElementById('chatArea').style.display='flex';
+document.getElementById('midTitle').textContent='Profile';
+renderList();return;
+}
+document.getElementById('profilePane').classList.add('hidden');
+document.getElementById('chatArea').style.display='flex';
+if(window.innerWidth<=900 && tab!=='profile'){document.getElementById('chatArea').classList.remove('open');}
+document.getElementById('midTitle').textContent=tab==='chats'?'Chats':tab==='calls'?'Calls':tab==='groups'?'Groups':tab==='status'?'Status':'TalkWave';
+if(tab==='status'){document.getElementById('welcomePane').classList.add('hidden');document.getElementById('chatPane').classList.add('hidden');}
+else if(!currentChatId){document.getElementById('welcomePane').classList.remove('hidden');document.getElementById('chatPane').classList.add('hidden');}
+renderList();
+}
+function setFilter(f,btn){currentFilter=f;document.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));if(btn)btn.classList.add('active');renderList();}
+function getAllChats(){
+let q=(document.getElementById('searchInput').value||'').toLowerCase();
+let arr=[];
+if(currentTab==='chats'||currentTab==='profile'){arr=[...state.contacts.map(c=>({...c,type:'chat'})),...state.groups.map(g=>({...g,type:'group',phone:'',color:g.color,emoji:g.emoji,online:false}))];}
+if(currentTab==='groups'){arr=state.groups.map(g=>({...g,type:'group',phone:'',online:false}));}
+if(currentTab==='calls'){return state.calls;}
+if(currentTab==='status'){return state.status;}
+if(currentFilter==='unread') arr=arr.filter(x=>x.unread>0);
+if(currentFilter==='groups') arr=arr.filter(x=>x.type==='group');
+if(currentFilter==='online') arr=arr.filter(x=>x.online);
+if(q) arr=arr.filter(x=>x.name.toLowerCase().includes(q)||(x.last||'').toLowerCase().includes(q));
+return arr;
+}
+function renderList(){
+let list=document.getElementById('mainList');
+let items=getAllChats();
+if(currentTab==='status'){
+list.innerHTML=`<div style="padding:10px"><button class="btnMain" onclick="openModal('newStatusModal')">＋ Add My Status</button>
+<div style="margin-top:14px"><b>Recent Updates</b></div></div>`+items.map(s=>`<div class="item" onclick="openStatus('${s.id}')">
+<div class="avatarWrap"><div class="avatar" style="background:${s.color}">${s.av}</div></div>
+<div class="itemInfo"><div class="itemTop"><b>${s.name}</b><small>${s.time}</small></div><div class="itemBottom"><p>${s.emoji} ${s.text}</p><span style="font-size:11px;color:var(--muted)">👁 ${s.views}</span></div></div></div>`).join('');
+return;
+}
+if(currentTab==='calls'){
+list.innerHTML=`<div style="padding:10px"><button class="btnMain" onclick="openModal('newChatModal')">📞 New Call</button></div>`+items.map(c=>`<div class="item" onclick="startCallFrom('${c.name}','${c.color}','${c.emoji}')">
+<div class="avatarWrap"><div class="avatar" style="background:${c.color}">${c.emoji}</div></div>
+<div class="itemInfo"><div class="itemTop"><b>${c.name}</b><small>${c.time}</small></div><div class="itemBottom"><p style="color:${c.type==='missed'?'#ef4444':'var(--muted)'}">${c.type==='missed'?'↙ Missed • ':c.type==='outgoing'?'↗ Outgoing • ':'↙ Incoming • '}${c.type==='missed'?'Tap to call back':'Voice Call'}</p></div></div>
+<button class="iconBtn" onclick="event.stopPropagation();startCallFrom('${c.name}','${c.color}','${c.emoji}')">📞</button><button class="iconBtn" onclick="event.stopPropagation();startCallFrom('${c.name}','${c.color}','${c.emoji}')">📹</button></div>`).join('');
+return;
+}
+if(items.length===0){list.innerHTML=`<div class="empty"><span>🔍</span><b>No chats found</b><p>Try different search or create new chat</p><br><button class="btnPill" onclick="openModal('newChatModal')">＋ New Chat</button></div>`;return;}
+list.innerHTML=items.map(it=>{
+let isBlocked=state.blocked.includes(it.id);
+let isMuted=state.muted.includes(it.id);
+return `<div class="item ${currentChatId===it.id?'active':''}" onclick="openChat('${it.id}','${it.type}')">
+<div class="avatarWrap"><div class="avatar" style="background:${it.color}">${it.emoji||it.name[0]}</div>${it.online?'<div class="onlineDot"></div>':''}</div>
+<div class="itemInfo"><div class="itemTop"><b>${it.name} ${isBlocked?'🚫':''} ${isMuted?'🔕':''}</b><small>${it.time||''}</small></div>
+<div class="itemBottom"><p>${it.last||'Tap to chat'}</p>${it.unread?`<span class="unread">${it.unread}</span>`:''}</div></div></div>`}).join('');
+let total=state.contacts.reduce((a,c)=>a+(c.unread||0),0)+state.groups.reduce((a,g)=>a+(g.unread||0),0);
+document.getElementById('totalUnread').textContent=total;
+}
+function findChat(id){return state.contacts.find(c=>c.id===id)||state.groups.find(g=>g.id===id);}
+function openChat(id,type){
+currentChatId=id;
+let chat=findChat(id);
+if(!chat) return;
+chat.unread=0;saveState();renderList();
+document.getElementById('welcomePane').classList.add('hidden');
+document.getElementById('profilePane').classList.add('hidden');
+document.getElementById('chatPane').classList.remove('hidden');
+document.getElementById('chatArea').classList.add('open');
+document.getElementById('chatArea').style.display='flex';
+document.getElementById('chatName').textContent=chat.name;
+document.getElementById('chatAvatar').textContent=chat.emoji||chat.name[0];
+document.getElementById('chatAvatar').style.background=chat.color;
+document.getElementById('chatStatus').textContent=chat.online?'Online • Active now':'Last seen recently';
+document.getElementById('chatStatus').className=chat.online?'':'off';
+document.getElementById('chatOnline').style.display=chat.online?'block':'none';
+document.getElementById('chatMenu').classList.add('hidden');
+renderMessages();
+}
+function closeChat(){document.getElementById('chatArea').classList.remove('open');document.getElementById('welcomePane').classList.remove('hidden');document.getElementById('chatPane').classList.add('hidden');currentChatId=null;}
+function renderMessages(){
+let box=document.getElementById('msgsBox');
+let msgs=state.messages[currentChatId]||[];
+if(msgs.length===0){box.innerHTML=`<div class="dateSep"><span>Today</span></div><div style="text-align:center;color:var(--muted);padding:20px">👋 Say hi to start conversation<br><span style="font-size:12px">Messages are end-to-end encrypted</span></div>`;return;}
+box.innerHTML=`<div class="dateSep"><span>Today</span></div>`+msgs.map((m,i)=>{
+let isMe=m.from==='me';
+let img=m.image?`<img class="msgImg" src="${m.image}">`:'';
+let reply=m.reply?`<div class="replyBox">Reply: ${m.reply}</div>`:'';
+return `<div class="msg ${isMe?'me':'other'}">${m.sender?`<b style="font-size:11px;opacity:.8">${m.sender}</b>`:''}${reply}${img}${m.text}<small>${m.time} ${isMe?'✓✓':''}</small>
+<div class="msgActions"><button class="miniBtn" onclick="replyMsg(${i})">↩ Reply</button><button class="miniBtn" onclick="forwardMsg(${i})">➤ Forward</button><button class="miniBtn" onclick="deleteMsg(${i})">🗑 Delete</button></div></div>`}).join('');
+box.scrollTop=box.scrollHeight;
+}
+function sendMessage(){
+let inp=document.getElementById('msgInput');
+let text=inp.value.trim();
+if(!text||!currentChatId) return;
+let time=new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
+if(!state.messages[currentChatId]) state.messages[currentChatId]=[];
+let replyText=window._replyText||null;
+state.messages[currentChatId].push({from:'me',text,time,reply:replyText});
+window._replyText=null;
+let chat=findChat(currentChatId);
+if(chat){chat.last='You: '+text;chat.time=time;}
+inp.value='';saveState();renderMessages();renderList();
+simulateReply();
+}
+function simulateReply(){
+if(!currentChatId) return;
+let chat=findChat(currentChatId);
+document.getElementById('typingBox').style.display='block';
+document.getElementById('typingName').textContent=chat.name;
+setTimeout(()=>{
+document.getElementById('typingBox').style.display='none';
+let replies=['Haha sahi hai 😂','Bro 100/10 🔥','Samajh gaya bro 👍','TalkWave is best 🌊','Acha phir batate hain ❤️','Voice note bhejo 🎤'];
+let time=new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
+if(!state.messages[currentChatId]) state.messages[currentChatId]=[];
+let txt=replies[Math.floor(Math.random()*replies.length)];
+state.messages[currentChatId].push({from:'other',text:txt,time,sender:chat.type==='group'?'Friend':null});
+chat.last=txt;chat.time=time;chat.unread=0;
+saveState();renderMessages();renderList();
+},1200);
+}
+function addEmoji(e){document.getElementById('msgInput').value+=e;document.getElementById('msgInput').focus();}
+function toggleEmoji(){document.getElementById('emojiRow').classList.toggle('hidden');}
+function sendImage(){
+if(!currentChatId){toast('Pehle chat select karo');return;}
+let imgs=['https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=400','https://images.unsplash.com/photo-1517841905240-472988babdf9?w=400','https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400','https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400'];
+let img=imgs[Math.floor(Math.random()*imgs.length)];
+let time=new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
+if(!state.messages[currentChatId]) state.messages[currentChatId]=[];
+state.messages[currentChatId].push({from:'me',text:'📸 Photo sent',image:img,time});
+saveState();renderMessages();toast('📸 Photo sent!');
+}
+function sendVoice(){
+if(!currentChatId){toast('Pehle chat select karo');return;}
+let time=new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
+if(!state.messages[currentChatId]) state.messages[currentChatId]=[];
+state.messages[currentChatId].push({from:'me',text:'🎤 Voice Message (0:12) ▓▓▓▓▓▓▓▓░░ ▶️',time});
+saveState();renderMessages();toast('🎤 Voice note sent!');
+}
+function replyMsg(i){let m=(state.messages[currentChatId]||[])[i];window._replyText=m.text;document.getElementById('msgInput').value='';document.getElementById('msgInput').placeholder='Replying to: '+m.text.slice(0,30)+'...';document.getElementById('msgInput').focus();toast('↩ Reply mode on');}
+function forwardMsg(i){let m=(state.messages[currentChatId]||[])[i];let name=prompt('Forward to which contact? (Name likho)',state.contacts[0].name);if(name){toast('➤ Forwarded to '+name);}}
+function deleteMsg(i){if(confirm('Delete this message?')){state.messages[currentChatId].splice(i,1);saveState();renderMessages();}}
+function clearChat(){if(!currentChatId)return;if(confirm('Clear all messages?')){state.messages[currentChatId]=[];saveState();renderMessages();toast('Chat cleared');}}
+function muteChat(){if(!currentChatId)return;let idx=state.muted.indexOf(currentChatId);if(idx>-1){state.muted.splice(idx,1);toast('🔔 Unmuted');}else{state.muted.push(currentChatId);toast('🔕 Muted');}saveState();renderList();}
+function blockChat(){if(!currentChatId)return;let idx=state.blocked.indexOf(currentChatId);if(idx>-1){state.blocked.splice(idx,1);toast('Unblocked');}else{state.blocked.push(currentChatId);toast('🚫 Blocked');}saveState();renderList();}
+function deleteChat(){if(!currentChatId)return;if(confirm('Delete this chat?')){state.contacts=state.contacts.filter(c=>c.id!==currentChatId);state.groups=state.groups.filter(g=>g.id!==currentChatId);delete state.messages[currentChatId];currentChatId=null;saveState();renderList();closeChat();toast('Chat deleted');}}
+function exportChat(){if(!currentChatId)return;let msgs=state.messages[currentChatId]||[];let txt=msgs.map(m=>(m.from==='me'?'Me':'Friend')+': '+m.text).join('\n');alert('Exported Chat:\n\n'+txt);toast('📤 Chat exported');}
+function toggleChatMenu(){document.getElementById('chatMenu').classList.toggle('hidden');}
+function openModal(id){document.getElementById(id).classList.add('open');if(id==='newChatModal')renderNewChatList();if(id==='newGroupModal')renderGroupMembers();}
+function closeModal(id){document.getElementById(id).classList.remove('open');}
+function renderNewChatList(){
+let q=(document.getElementById('newChatSearch').value||'').toLowerCase();
+let list=document.getElementById('newChatList');
+let filtered=state.contacts.filter(c=>c.name.toLowerCase().includes(q));
+list.innerHTML=filtered.map(c=>`<div class="contactRow" onclick="startNewChat('${c.id}')"><div class="avatar" style="background:${c.color}">${c.emoji}</div><div><b>${c.name}</b><div style="font-size:12px;color:var(--muted)">${c.phone}</div></div><span class="arrow" style="margin-left:auto">›</span></div>`).join('')+`<div style="margin-top:12px"><b>Add New Contact</b><div class="field" style="margin-top:8px"><input id="newContactName" placeholder="New contact name"></div><button class="btnMain" onclick="addNewContact()">＋ Add Contact</button></div>`;
+}
+function addNewContact(){
+let name=document.getElementById('newContactName').value.trim();
+if(!name){toast('Naam likho');return;}
+let colors=['#ec4899','#2563eb','#f59e0b','#10b981','#8b5cf6','#ef4444'];
+let id='c'+Date.now();
+state.contacts.unshift({id,name,phone:'0300'+Math.floor(Math.random()*9000000),color:colors[Math.floor(Math.random()*colors.length)],emoji:'👤',online:Math.random()>0.5,last:'New contact',time:'Now',unread:0});
+state.messages[id]=[];
+saveState();renderList();closeModal('newChatModal');openChat(id,'chat');toast('✅ '+name+' added');
+}
+function startNewChat(id){closeModal('newChatModal');openChat(id,'chat');}
+function renderGroupMembers(){
+let box=document.getElementById('groupMembers');
+box.innerHTML=state.contacts.map(c=>`<div class="contactRow ${selectedGroupMembers.has(c.id)?'selected':''}" onclick="toggleMember('${c.id}',this)"><div class="avatar" style="background:${c.color}">${c.emoji}</div><div><b>${c.name}</b><div style="font-size:12px;color:var(--muted)">${c.phone}</div></div><div class="check">✓</div></div>`).join('');
+}
+function toggleMember(id,el){if(selectedGroupMembers.has(id)){selectedGroupMembers.delete(id);el.classList.remove('selected');}else{selectedGroupMembers.add(id);el.classList.add('selected');}}
+function createGroup(){
+let name=document.getElementById('groupName').value.trim();
+if(!name){toast('Group name likho');return;}
+if(selectedGroupMembers.size===0){toast('Members select karo');return;}
+let id='g'+Date.now();
+state.groups.unshift({id,name:name+' 👥',color:'#7c3aed',emoji:'👥',members:selectedGroupMembers.size+1,last:'Group created 🎉',time:'Now',unread:1});
+state.messages[id]=[{from:'other',text:'Group created 🎉 Welcome!',time:'Now',sender:'TalkWave'}];
+selectedGroupMembers.clear();document.getElementById('groupName').value='';
+saveState();renderList();closeModal('newGroupModal');setTab('groups',document.querySelector('[data-nav=groups]'));openChat(id,'group');toast('🎉 Group created: '+name);
+}
+function addStatus(){
+let txt=document.getElementById('statusText').value.trim();
+if(!txt){toast('Status likho');return;}
+let time='Just now';
+state.status.unshift({id:'s'+Date.now(),name:currentUser?currentUser.name:'You',emoji:'🌊',text:txt,time,views:0,color:'#7c3aed',av:'👤'});
+saveState();closeModal('newStatusModal');document.getElementById('statusText').value='';setTab('status',document.querySelector('[data-nav=status]'));toast('✅ Status posted!');
+}
+function openStatus(id){
+let s=state.status.find(x=>x.id===id);
+if(!s) return;
+document.getElementById('statusViewer').classList.add('open');
+document.getElementById('viewerName').textContent=s.name;
+document.getElementById('viewerTime').textContent=s.time+' • '+s.views+' views';
+document.getElementById('viewerAvatar').textContent=s.av;
+document.getElementById('viewerAvatar').style.background=s.color;
+document.getElementById('viewerEmoji').textContent=s.emoji;
+document.getElementById('viewerText').textContent=s.text;
+document.getElementById('viewerViews').textContent='👁 '+s.views+' views';
+let bar=document.getElementById('statusProgress');bar.style.width='0%';
+let w=0;clearInterval(statusTimer);
+statusTimer=setInterval(()=>{w+=2;bar.style.width=w+'%';if(w>=100){clearInterval(statusTimer);closeStatusViewer();}},100);
+}
+function closeStatusViewer(){document.getElementById('statusViewer').classList.remove('open');clearInterval(statusTimer);}
+function replyStatus(){
+let v=document.getElementById('statusReply').value.trim();
+if(!v) return;
+toast('Reply sent: '+v);document.getElementById('statusReply').value='';closeStatusViewer();
+}
+function startCall(type){
+if(!currentChatId){toast('Pehle chat select karo');return;}
+let chat=findChat(currentChatId);
+startCallFrom(chat.name,chat.color,chat.emoji||'👤',type);
+}
+function startCallFrom(name,color,emoji,type='voice'){
+document.getElementById('callScreen').classList.add('open');
+document.getElementById('callName').textContent=name;
+document.getElementById('callAvatar').textContent=emoji;
+document.getElementById('callAvatar').style.background=color;
+document.getElementById('callType').textContent=(type==='video'?'Video':'Voice')+' Call • Connecting...';
+callSec=0;isMuted=false;isVideo=type==='video';
+document.getElementById('muteBtn').classList.remove('active');
+document.getElementById('videoBtn').classList.toggle('active',isVideo);
+clearInterval(callInterval);
+callInterval=setInterval(()=>{callSec++;let m=String(Math.floor(callSec/60)).padStart(2,'0');let s=String(callSec%60).padStart(2,'0');document.getElementById('callTimer').textContent=m+':'+s;document.getElementById('callType').textContent=(isVideo?'Video':'Voice')+' Call • Connected';},1000);
+let exists=state.calls.find(c=>c.name===name);
+if(!exists){state.calls.unshift({id:'call'+Date.now(),name,type:'outgoing',color,emoji,time:'Just now'});saveState();}
+}
+function toggleMute(){isMuted=!isMuted;document.getElementById('muteBtn').classList.toggle('active',isMuted);toast(isMuted?'🔇 Muted':'🎤 Unmuted');}
+function toggleVideo(){isVideo=!isVideo;document.getElementById('videoBtn').classList.toggle('active',isVideo);toast(isVideo?'📹 Video On':'📹 Video Off');}
+function toggleSpeaker(){toast('🔊 Speaker toggled');}
+function endCall(){clearInterval(callInterval);document.getElementById('callScreen').classList.remove('open');toast('📞 Call ended • Duration: '+document.getElementById('callTimer').textContent);renderList();}
+function saveProfile(){
+let name=document.getElementById('editName').value.trim();
+let bio=document.getElementById('editBio').value.trim();
+let phone=document.getElementById('editPhone').value.trim();
+if(!name){toast('Naam likho');return;}
+currentUser.name=name;currentUser.bio=bio;currentUser.phone=phone;currentUser.avatar=name[0].toUpperCase();
+saveUser();applyUserToUI();closeModal('editProfileModal');toast('✅ Profile updated!');
+}
+function changeAvatar(){
+let emojis=['😎','🔥','🌊','👑','💎','🚀','😂','❤️'];
+let e=emojis[Math.floor(Math.random()*emojis.length)];
+document.getElementById('profileAvatarBig').textContent=e;
+document.getElementById('sideAvatar').textContent=e;
+currentUser.avatar=e;saveUser();toast('🖼️ Photo changed: '+e);
+}
+function toggleDark(){
+document.body.classList.toggle('dark');
+let on=document.body.classList.contains('dark');
+document.getElementById('darkSwitch').classList.toggle('on',on);
+localStorage.setItem('talkwave_dark',on?'1':'0');
+toast(on?'🌙 Dark Mode On':'☀️ Light Mode On');
+}
+function toggleSetting(el,name){
+let sw=el.querySelector('.switch');
+if(sw){sw.classList.toggle('on');toast(name+': '+(sw.classList.contains('on')?'ON':'OFF'));}
+}
+function setWallpaper(val){document.querySelector('.msgs').style.background=val;document.querySelector('.chatArea').style.background=val;closeModal('wallpaperModal');toast('🎨 Wallpaper changed!');}
+function showStorage(){updateStorageInfo();toast('💾 Storage: '+document.getElementById('storageInfo').textContent);}
+if(localStorage.getItem('talkwave_dark')==='1'){document.body.classList.add('dark');setTimeout(()=>document.getElementById('darkSwitch').classList.add('on'),100);}
+if(currentUser){
+document.getElementById('authScreen').style.display='none';
+document.getElementById('app').style.display='block';
+applyUserToUI();
+}
+renderList();updateStorageInfo();
+document.addEventListener('click',e=>{if(e.target.classList.contains('modal')) e.target.classList.remove('open');});
+</script>
+</body>
+</html>

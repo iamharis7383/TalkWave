@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TalkWave - Firebase Edition</title>
+<title>TalkWave</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
@@ -13,7 +13,7 @@
 body.dark{--bg:#0f0f1a;--card:#1a1a2e;--text:#f9fafb;--muted:#9ca3af;--line:#2e2e44}
 body{background:var(--bg);color:var(--text);overflow:hidden}
 button{cursor:pointer;border:none;outline:none;font-family:inherit}
-input,textarea{font-family:inherit;outline:none}
+input{font-family:inherit;outline:none}
 ::-webkit-scrollbar{width:6px}::-webkit-scrollbar-thumb{background:#c4b5fd;border-radius:10px}
 .hidden{display:none!important}
 #authScreen{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#7c3aed,#2563eb,#4f46e5);z-index:100;padding:16px}
@@ -48,7 +48,7 @@ input,textarea{font-family:inherit;outline:none}
 .navBtn span{font-size:20px}.navBtn.active{background:#fff;color:#7c3aed;box-shadow:0 8px 20px rgba(0,0,0,.2)}
 .navBtn .badge{position:absolute;top:6px;right:8px;background:#ef4444;color:#fff;font-size:10px;padding:2px 6px;border-radius:999px}
 .sideBottom{margin-top:auto;display:flex;flex-direction:column;gap:6px;align-items:center}
-.avatar{width:42px;height:42px;border-radius:50%;object-fit:cover;border:2px solid #fff;background:#ddd;display:grid;place-items:center;font-weight:800;font-size:18px;color:#fff}
+.avatar{width:42px;height:42px;border-radius:50%;border:2px solid #fff;background:#ddd;display:grid;place-items:center;font-weight:800;font-size:18px;color:#fff}
 .avatar.lg{width:72px;height:72px;font-size:28px}
 .middle{background:var(--card);border-right:1px solid var(--line);display:flex;flex-direction:column;overflow:hidden}
 .midHead{padding:18px 16px 12px;border-bottom:1px solid var(--line)}
@@ -142,24 +142,23 @@ input,textarea{font-family:inherit;outline:none}
 <div>
 <div class="logoRow"><div class="logoIcon">💬</div> TalkWave</div>
 <h1>Ride The <span>Wave</span> Of Conversation</h1>
-<p>Connect instantly with chat, voice and video. Secure, fast and seamless. Ab Firebase se powered.</p>
-<div class="pillRow"><span class="pill">✓ Firebase Powered</span><span class="pill">✓ Real-time Chat</span><span class="pill">✓ Free To Use</span></div>
+<p>Connect instantly with chat, voice and video. Secure, fast and seamless.</p>
+<div class="pillRow"><span class="pill">✓ End-to-End Encrypted</span><span class="pill">✓ Real-time Chat</span><span class="pill">✓ Free To Use</span></div>
 </div>
-<div class="stats"><div class="stat"><b>Live</b><span>Firebase</span></div><div class="stat"><b>4.9 ★</b><span>Rating</span></div><div class="stat"><b>zapp-5733f</b><span>Project</span></div></div>
+<div class="stats"><div class="stat"><b>Live</b><span>Chat</span></div><div class="stat"><b>4.9 ★</b><span>Rating</span></div><div class="stat"><b>100%</b><span>Free</span></div></div>
 </div>
 <div class="authRight">
-<h2 id="authTitle">Create Account ✨</h2>
-<p id="authSub">Sirf Name, Phone aur Password se account banao.</p>
+<h2 id="authTitle">Create Account</h2>
+<p id="authSub">Create an account with Name, Phone and Password.</p>
 <div class="tabs">
 <button id="tabSignup" class="active" onclick="switchAuth('signup')">Sign Up</button>
 <button id="tabLogin" onclick="switchAuth('login')">Login</button>
 </div>
-<div id="signupNameField" class="field"><label>Full Name</label><input id="regName" placeholder="e.g. Muhammad Haris"></div>
-<div class="field"><label>Phone Number</label><input id="authPhone" placeholder="03001234567"></div>
-<div class="field"><label>Password</label><input id="authPass" type="password" placeholder="••••••••"></div>
+<div id="signupNameField" class="field"><label>Full Name</label><input id="regName" placeholder="Your full name"></div>
+<div class="field"><label>Phone Number</label><input id="authPhone" placeholder="Enter phone number"></div>
+<div class="field"><label>Password</label><input id="authPass" type="password" placeholder="Enter password"></div>
 <button class="btnMain" onclick="handleAuth()" id="authBtn">Create Account →</button>
-<div class="infoBox"><b>🔥 Firebase Live:</b><br>Account Firebase Firestore me save hoga.<br>Koi Demo User / OTP / SMS nahi hai.<br>2 phones se alag alag account banao aur naam se add karo.</div>
-<p style="text-align:center;font-size:12px;color:#9ca3af;margin-top:12px">Project: zapp-5733f • Firebase Connected</p>
+<div class="infoBox"><b>How it works:</b><br>Create an account, then add someone by name and start chatting. No demo users.</div>
 </div>
 </div>
 </div>
@@ -183,7 +182,7 @@ input,textarea{font-family:inherit;outline:none}
 <div class="midHead">
 <div class="midHeadTop"><h2 id="midTitle">Chats</h2><div style="display:flex;gap:8px"><button class="iconBtn" onclick="openModal('addUserModal')">＋</button><button class="iconBtn" onclick="toggleDark()">🌙</button></div></div>
 <div class="searchBox">🔍 <input id="searchInput" placeholder="Search chats..." oninput="renderList()"></div>
-<div class="chipRow" id="chipRow">
+<div class="chipRow">
 <button class="chip active" onclick="setFilter('all',this)">All</button>
 <button class="chip" onclick="setFilter('unread',this)">Unread</button>
 <button class="chip" onclick="setFilter('groups',this)">Groups</button>
@@ -202,13 +201,13 @@ input,textarea{font-family:inherit;outline:none}
 <div class="welcomeCard">
 <div style="font-size:60px">🌊💬</div>
 <h1>Welcome to TalkWave</h1>
-<p id="welcomeText">Koi chat nahi hai. Pehle kisi ko <b>Name se Add</b> karo, phir chat start hogi. Sab kuch Firebase me save hoga.</p>
+<p id="welcomeText">No chats yet. Add someone by name to start chatting.</p>
 <div class="welcomeBtns">
 <button class="btnPill" onclick="openModal('addUserModal')">＋ Add User By Name</button>
 <button class="btnGhost" onclick="openModal('newGroupModal')">👥 Create Group</button>
 <button class="btnGhost" onclick="setTab('status',document.querySelector('[data-nav=status]'))">View Status</button>
 </div>
-<p style="margin-top:16px;font-size:12px">🔥 Firebase: zapp-5733f • Real-time • No Demo Users</p>
+<p style="margin-top:16px;font-size:12px">🔒 End-to-end encrypted • Real-time</p>
 </div>
 </div>
 
@@ -242,7 +241,7 @@ input,textarea{font-family:inherit;outline:none}
 <div class="profileCard">
 <div class="avatar lg" id="profileAvatarBig" style="margin:0 auto">?</div>
 <h3 id="profileNameBig">User</h3>
-<p id="profileBioBig">Ride the wave 🌊</p>
+<p id="profileBioBig">Ride the wave</p>
 <p id="profilePhoneBig">-</p>
 <div style="display:flex;gap:8px;justify-content:center;margin-top:14px">
 <button class="btnPill" onclick="openModal('editProfileModal')">✏️ Edit Profile</button>
@@ -255,7 +254,7 @@ input,textarea{font-family:inherit;outline:none}
 <div class="settingItem" onclick="toggleSetting(this,'Sounds')"><span style="font-size:20px">🔊</span><div><b>Sounds</b><small>Chat sounds</small></div><div class="switch on"></div></div>
 <div class="settingItem" onclick="openModal('wallpaperModal')"><span style="font-size:20px">🎨</span><div><b>Chat Wallpaper</b><small>Change background</small></div><span class="arrow">›</span></div>
 <div class="settingItem" onclick="openModal('privacyModal')"><span style="font-size:20px">🔒</span><div><b>Privacy</b><small>Last seen, Blocked</small></div><span class="arrow">›</span></div>
-<div class="settingItem" onclick="showFirebaseInfo()"><span style="font-size:20px">🔥</span><div><b>Firebase</b><small id="firebaseInfo">zapp-5733f • Connected</small></div><span class="arrow">›</span></div>
+<div class="settingItem" onclick="showAppInfo()"><span style="font-size:20px">ℹ️</span><div><b>About TalkWave</b><small>Version 3.0</small></div><span class="arrow">›</span></div>
 <div class="settingItem" style="border-color:#fecaca" onclick="logout()"><span style="font-size:20px">🚪</span><div><b style="color:#ef4444">Logout</b><small>Sign out</small></div><span class="arrow">›</span></div>
 </div>
 </div>
@@ -263,13 +262,12 @@ input,textarea{font-family:inherit;outline:none}
 </div>
 </div>
 
-<!-- MODALS -->
-<div class="modal" id="addUserModal"><div class="modalBox"><div class="modalHead"><h3>＋ Add User By Name</h3><button class="closeBtn" onclick="closeModal('addUserModal')">✕</button></div><div class="modalBody"><div class="field"><label>Search By Name or Phone</label><input id="addUserSearch" placeholder="e.g. Ali, Haris, 0300..." oninput="searchUsersByName()"></div><div id="addUserResults"><p style="font-size:13px;color:var(--muted);text-align:center;padding:20px">Naam likho — Firebase se user dhoond ke aayega.<br><br>Example: Dusre phone se account banao, phir yahan uska naam likho.</p></div></div></div></div>
-<div class="modal" id="newGroupModal"><div class="modalBox"><div class="modalHead"><h3>👥 New Group</h3><button class="closeBtn" onclick="closeModal('newGroupModal')">✕</button></div><div class="modalBody"><div class="field"><label>Group Name</label><input id="groupName" placeholder="e.g. Family Group"></div><div class="field"><label>Select Members (Your Contacts)</label></div><div id="groupMembers"></div><button class="btnMain" onclick="createGroup()">Create Group →</button></div></div></div>
-<div class="modal" id="newStatusModal"><div class="modalBox"><div class="modalHead"><h3>🟣 Add Status</h3><button class="closeBtn" onclick="closeModal('newStatusModal')">✕</button></div><div class="modalBody"><div class="field"><label>Your Status</label><input id="statusText" placeholder="e.g. Having a great day 🌊"></div><button class="btnMain" onclick="addStatus()">Post Status</button></div></div></div>
+<div class="modal" id="addUserModal"><div class="modalBox"><div class="modalHead"><h3>＋ Add User By Name</h3><button class="closeBtn" onclick="closeModal('addUserModal')">✕</button></div><div class="modalBody"><div class="field"><label>Search By Name or Phone</label><input id="addUserSearch" placeholder="Enter name or phone" oninput="searchUsersByName()"></div><div id="addUserResults"><p style="font-size:13px;color:var(--muted);text-align:center;padding:20px">Type a name to search for a user.</p></div></div></div></div>
+<div class="modal" id="newGroupModal"><div class="modalBox"><div class="modalHead"><h3>👥 New Group</h3><button class="closeBtn" onclick="closeModal('newGroupModal')">✕</button></div><div class="modalBody"><div class="field"><label>Group Name</label><input id="groupName" placeholder="Enter group name"></div><div class="field"><label>Select Members (Your Contacts)</label></div><div id="groupMembers"></div><button class="btnMain" onclick="createGroup()">Create Group →</button></div></div></div>
+<div class="modal" id="newStatusModal"><div class="modalBox"><div class="modalHead"><h3>🟣 Add Status</h3><button class="closeBtn" onclick="closeModal('newStatusModal')">✕</button></div><div class="modalBody"><div class="field"><label>Your Status</label><input id="statusText" placeholder="What is on your mind?"></div><button class="btnMain" onclick="addStatus()">Post Status</button></div></div></div>
 <div class="modal" id="editProfileModal"><div class="modalBox"><div class="modalHead"><h3>✏️ Edit Profile</h3><button class="closeBtn" onclick="closeModal('editProfileModal')">✕</button></div><div class="modalBody"><div class="field"><label>Name</label><input id="editName"></div><div class="field"><label>Bio</label><input id="editBio"></div><div class="field"><label>Phone (cannot change)</label><input id="editPhone" disabled></div><button class="btnMain" onclick="saveProfile()">Save Profile</button></div></div></div>
 <div class="modal" id="wallpaperModal"><div class="modalBox"><div class="modalHead"><h3>🎨 Chat Wallpaper</h3><button class="closeBtn" onclick="closeModal('wallpaperModal')">✕</button></div><div class="modalBody"><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px"><div onclick="setWallpaper('#f4f2ff')" style="height:90px;background:#f4f2ff;border-radius:12px;border:2px solid #ddd;cursor:pointer;display:grid;place-items:center">Light</div><div onclick="setWallpaper('#0f0f1a')" style="height:90px;background:#0f0f1a;border-radius:12px;cursor:pointer;color:#fff;display:grid;place-items:center">Dark</div><div onclick="setWallpaper('linear-gradient(135deg,#7c3aed,#2563eb)')" style="height:90px;background:linear-gradient(135deg,#7c3aed,#2563eb);border-radius:12px;cursor:pointer;color:#fff;display:grid;place-items:center">Wave</div><div onclick="setWallpaper('#fef3c7')" style="height:90px;background:#fef3c7;border-radius:12px;cursor:pointer;display:grid;place-items:center">Warm</div><div onclick="setWallpaper('#dcfce7')" style="height:90px;background:#dcfce7;border-radius:12px;cursor:pointer;display:grid;place-items:center">Mint</div><div onclick="setWallpaper('#ffe4e6')" style="height:90px;background:#ffe4e6;border-radius:12px;cursor:pointer;display:grid;place-items:center">Pink</div></div></div></div></div>
-<div class="modal" id="privacyModal"><div class="modalBox"><div class="modalHead"><h3>🔒 Privacy</h3><button class="closeBtn" onclick="closeModal('privacyModal')">✕</button></div><div class="modalBody"><div class="settingItem" onclick="toggleSetting(this,'Last Seen')"><div><b>Last Seen</b><small>Everyone</small></div><div class="switch on"></div></div><div class="settingItem" onclick="toggleSetting(this,'Read Receipts')"><div><b>Read Receipts</b><small>Blue ticks</small></div><div class="switch on"></div></div><p style="font-size:12px;color:var(--muted);margin-top:10px">Privacy Firebase se sync hogi.</p></div></div></div>
+<div class="modal" id="privacyModal"><div class="modalBox"><div class="modalHead"><h3>🔒 Privacy</h3><button class="closeBtn" onclick="closeModal('privacyModal')">✕</button></div><div class="modalBody"><div class="settingItem" onclick="toggleSetting(this,'Last Seen')"><div><b>Last Seen</b><small>Everyone</small></div><div class="switch on"></div></div><div class="settingItem" onclick="toggleSetting(this,'Read Receipts')"><div><b>Read Receipts</b><small>Blue ticks</small></div><div class="switch on"></div></div></div></div></div>
 
 <div class="callScreen" id="callScreen">
 <div class="callAvatar" id="callAvatar">?</div>
@@ -277,7 +275,7 @@ input,textarea{font-family:inherit;outline:none}
 <p id="callType" style="opacity:.8;margin-top:4px">Voice Call...</p>
 <h1 id="callTimer" style="margin-top:16px;font-size:42px">00:00</h1>
 <div class="callBtns"><button class="callBtn" id="muteBtn" onclick="toggleMute()">🎤</button><button class="callBtn" id="videoBtn" onclick="toggleVideo()">📹</button><button class="callBtn" onclick="toggleSpeaker()">🔊</button><button class="callBtn red" onclick="endCall()">📞</button></div>
-<p style="margin-top:16px;opacity:.7;font-size:13px">TalkWave Call • Firebase: zapp-5733f</p>
+<p style="margin-top:16px;opacity:.7;font-size:13px">TalkWave Call • Encrypted</p>
 </div>
 
 <div class="statusViewer" id="statusViewer">
@@ -290,7 +288,6 @@ input,textarea{font-family:inherit;outline:none}
 <div id="toast"></div>
 
 <script>
-// ===== FIREBASE CONFIG - YOUR DATABASE =====
 const firebaseConfig = {
   apiKey: "AIzaSyBY9sGxMHnMrsD8F324JxKhMctI-DtVVtc",
   authDomain: "zapp-5733f.firebaseapp.com",
@@ -301,16 +298,24 @@ const firebaseConfig = {
 };
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
-
 let currentUser = JSON.parse(localStorage.getItem('talkwave_user')||'null');
-let contacts = JSON.parse(localStorage.getItem('talkwave_contacts')||'[]');
-let groups = JSON.parse(localStorage.getItem('talkwave_groups')||'[]');
-let callsLog = JSON.parse(localStorage.getItem('talkwave_calls')||'[]');
-let statusList = JSON.parse(localStorage.getItem('talkwave_status')||'[]');
+let contacts = [];
+let groups = [];
+let callsLog = [];
+let statusList = [];
+try{
+  let c = JSON.parse(localStorage.getItem('talkwave_contacts')||'[]');
+  let banned = ['Sarah Khan','Ahmed Raza','Ayesha Malik','Bilal Khan','Fatima Noor','Usman Ali','Family Group','Coding Squad','University Friends'];
+  contacts = c.filter(x=>!banned.includes(x.name));
+  groups = (JSON.parse(localStorage.getItem('talkwave_groups')||'[]')).filter(x=>!banned.includes(x.name));
+  callsLog = [];
+  statusList = [];
+  localStorage.setItem('talkwave_contacts',JSON.stringify(contacts));
+  localStorage.setItem('talkwave_groups',JSON.stringify(groups));
+}catch(e){ contacts=[]; groups=[]; }
 let currentChatId=null, currentChat=null, currentTab='chats', currentFilter='all';
 let msgUnsub=null, callInterval=null, callSec=0, isMuted=false, isVideo=false, statusTimer=null;
 let selectedGroupMembers=new Set();
-
 function toast(m){let t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2600);}
 function saveLocal(){localStorage.setItem('talkwave_contacts',JSON.stringify(contacts));localStorage.setItem('talkwave_groups',JSON.stringify(groups));localStorage.setItem('talkwave_calls',JSON.stringify(callsLog));localStorage.setItem('talkwave_status',JSON.stringify(statusList));}
 function cleanPhone(p){return (p||'').replace(/[^0-9]/g,'');}
@@ -319,8 +324,8 @@ function switchAuth(mode){
 document.getElementById('tabSignup').classList.toggle('active',mode==='signup');
 document.getElementById('tabLogin').classList.toggle('active',mode==='login');
 document.getElementById('signupNameField').classList.toggle('hidden',mode!=='signup');
-document.getElementById('authTitle').textContent=mode==='login'?'Welcome back 👋':'Create Account ✨';
-document.getElementById('authSub').textContent=mode==='login'?'Login with Phone + Password.':'Sirf Name, Phone aur Password se account banao.';
+document.getElementById('authTitle').textContent=mode==='login'?'Welcome back':'Create Account';
+document.getElementById('authSub').textContent=mode==='login'?'Login with Phone and Password.':'Create an account with Name, Phone and Password.';
 document.getElementById('authBtn').textContent=mode==='login'?'Login to TalkWave →':'Create Account →';
 }
 async function handleAuth(){
@@ -329,29 +334,29 @@ let phone=cleanPhone(document.getElementById('authPhone').value);
 let pass=document.getElementById('authPass').value.trim();
 let isSignup=document.getElementById('tabSignup').classList.contains('active');
 let btn=document.getElementById('authBtn');
-if(isSignup && !name){toast('⚠️ Name likho');return;}
-if(!phone || phone.length<10){toast('⚠️ Sahi Phone Number likho');return;}
-if(!pass || pass.length<4){toast('⚠️ Password kam se kam 4 chars');return;}
-btn.disabled=true;btn.textContent='Connecting to Firebase...';
+if(isSignup && !name){toast('Please enter your name');return;}
+if(!phone || phone.length<10){toast('Please enter a valid phone number');return;}
+if(!pass || pass.length<4){toast('Password must be at least 4 characters');return;}
+btn.disabled=true;btn.textContent='Connecting...';
 try{
 let ref=db.collection('users').doc(phone);
 let snap=await ref.get();
 if(isSignup){
-if(snap.exists){toast('❌ Ye number pehle se hai, Login karo');btn.disabled=false;btn.textContent='Create Account →';return;}
-let user={name,phone,password:pass,bio:'Ride the wave 🌊 | Available',avatar:name[0].toUpperCase(),createdAt:Date.now(),online:true};
+if(snap.exists){toast('This number is already registered. Please login.');btn.disabled=false;btn.textContent='Create Account →';return;}
+let user={name,phone,password:pass,bio:'Ride the wave | Available',avatar:name[0].toUpperCase(),createdAt:Date.now(),online:true};
 await ref.set(user);
 currentUser=user;localStorage.setItem('talkwave_user',JSON.stringify(user));
-toast('✅ Account ban gaya! Welcome '+name);
+toast('Account created. Welcome '+name);
 } else {
-if(!snap.exists){toast('❌ Account nahi mila, pehle Sign Up karo');btn.disabled=false;btn.textContent='Login to TalkWave →';return;}
+if(!snap.exists){toast('Account not found. Please sign up first.');btn.disabled=false;btn.textContent='Login to TalkWave →';return;}
 let data=snap.data();
-if(data.password!==pass){toast('❌ Wrong Password!');btn.disabled=false;btn.textContent='Login to TalkWave →';return;}
+if(data.password!==pass){toast('Wrong password.');btn.disabled=false;btn.textContent='Login to TalkWave →';return;}
 currentUser=data;localStorage.setItem('talkwave_user',JSON.stringify(data));
 await ref.update({online:true}).catch(()=>{});
-toast('🎉 Welcome back, '+data.name);
+toast('Welcome back, '+data.name);
 }
 finishLogin();
-}catch(e){console.error(e);toast('❌ Firebase Error: '+e.message+' | Rules check karo');btn.disabled=false;btn.textContent=isSignup?'Create Account →':'Login to TalkWave →';}
+}catch(e){console.error(e);toast('Error: '+e.message);btn.disabled=false;btn.textContent=isSignup?'Create Account →':'Login to TalkWave →';}
 }
 function finishLogin(){
 document.getElementById('authScreen').style.display='none';
@@ -368,7 +373,7 @@ document.getElementById('profileAvatarBig').style.background=getColor(currentUse
 document.getElementById('profileNameBig').textContent=currentUser.name;
 document.getElementById('profileBioBig').textContent=currentUser.bio||'';
 document.getElementById('profilePhoneBig').textContent=currentUser.phone;
-document.getElementById('welcomeText').innerHTML='Hello <b>'+currentUser.name+'</b> 👋 Koi chat nahi hai. Pehle kisi ko <b>Name se Add</b> karo, phir chat start hogi.';
+document.getElementById('welcomeText').innerHTML='Hello <b>'+currentUser.name+'</b>. No chats yet. Add someone by name to start chatting.';
 document.getElementById('editName').value=currentUser.name;
 document.getElementById('editBio').value=currentUser.bio||'';
 document.getElementById('editPhone').value=currentUser.phone;
@@ -377,13 +382,14 @@ async function loadMyContactsFromFirebase(){
 try{
 let snap=await db.collection('users').doc(currentUser.phone).collection('myContacts').get();
 if(!snap.empty){
-contacts=snap.docs.map(d=>d.data());
+let banned=['Sarah Khan','Ahmed Raza','Ayesha Malik','Bilal Khan','Fatima Noor','Usman Ali'];
+contacts=snap.docs.map(d=>d.data()).filter(x=>!banned.includes(x.name));
 saveLocal();renderList();
 }
-}catch(e){console.log('contacts load',e);}
+}catch(e){console.log(e);}
 }
 async function logout(){
-if(confirm('Logout karna hai?')){
+if(confirm('Do you want to logout?')){
 try{await db.collection('users').doc(currentUser.phone).update({online:false});}catch(e){}
 localStorage.removeItem('talkwave_user');currentUser=null;
 document.getElementById('app').style.display='none';document.getElementById('authScreen').style.display='flex';toast('Logged out');
@@ -403,18 +409,16 @@ else if(!currentChatId){document.getElementById('welcomePane').classList.remove(
 renderList();
 }
 function setFilter(f,btn){currentFilter=f;document.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));if(btn)btn.classList.add('active');renderList();}
-function getChatId(otherPhone){
-let a=[currentUser.phone,otherPhone].sort();return 'chat_'+a[0]+'_'+a[1];
-}
+function getChatId(otherPhone){let a=[currentUser.phone,otherPhone].sort();return 'chat_'+a[0]+'_'+a[1];}
 function renderList(){
 let list=document.getElementById('mainList');
 let q=(document.getElementById('searchInput').value||'').toLowerCase();
 if(currentTab==='status'){
-list.innerHTML=`<div style="padding:10px"><button class="btnMain" onclick="openModal('newStatusModal')">＋ Add My Status</button><div style="margin-top:14px"><b>Recent Updates</b></div></div>`+(statusList.length?statusList.map(s=>`<div class="item" onclick="openStatus('${s.id}')"><div class="avatarWrap"><div class="avatar" style="background:${getColor(s.name)}">${s.avatar||s.name[0]}</div></div><div class="itemInfo"><div class="itemTop"><b>${s.name}</b><small>${s.time}</small></div><div class="itemBottom"><p>${s.emoji||'🌊'} ${s.text}</p><span style="font-size:11px">👁 ${s.views||0}</span></div></div></div>`).join(''):`<div class="empty"><span>🟣</span><b>No Status Yet</b><p>Apna pehla status add karo</p></div>`);
+list.innerHTML=`<div style="padding:10px"><button class="btnMain" onclick="openModal('newStatusModal')">＋ Add My Status</button><div style="margin-top:14px"><b>Recent Updates</b></div></div>`+(statusList.length?statusList.map(s=>`<div class="item" onclick="openStatus('${s.id}')"><div class="avatarWrap"><div class="avatar" style="background:${getColor(s.name)}">${s.avatar||s.name[0]}</div></div><div class="itemInfo"><div class="itemTop"><b>${s.name}</b><small>${s.time}</small></div><div class="itemBottom"><p>${s.emoji||'🌊'} ${s.text}</p><span style="font-size:11px">👁 ${s.views||0}</span></div></div></div>`).join(''):`<div class="empty"><span>🟣</span><b>No Status Yet</b><p>Add your first status</p></div>`);
 return;
 }
 if(currentTab==='calls'){
-list.innerHTML=`<div style="padding:10px"><button class="btnMain" onclick="openModal('addUserModal')">📞 New Call</button></div>`+(callsLog.length?callsLog.map(c=>`<div class="item" onclick="startCallFrom('${c.name}','${c.phone}')"><div class="avatar" style="background:${getColor(c.name)}">${c.avatar||c.name[0]}</div><div class="itemInfo"><div class="itemTop"><b>${c.name}</b><small>${c.time}</small></div><div class="itemBottom"><p style="color:${c.type==='missed'?'#ef4444':'var(--muted)'}">${c.type==='missed'?'↙ Missed':'↗ Outgoing'} • ${c.callType||'Voice'} Call</p></div></div><button class="iconBtn" onclick="event.stopPropagation();startCallFrom('${c.name}','${c.phone}')">📞</button></div>`).join(''):`<div class="empty"><span>📞</span><b>No Calls Yet</b><p>Abhi koi call nahi hui</p></div>`);
+list.innerHTML=`<div style="padding:10px"><button class="btnMain" onclick="openModal('addUserModal')">📞 New Call</button></div>`+(callsLog.length?callsLog.map(c=>`<div class="item" onclick="startCallFrom('${c.name}','${c.phone}')"><div class="avatar" style="background:${getColor(c.name)}">${c.avatar||c.name[0]}</div><div class="itemInfo"><div class="itemTop"><b>${c.name}</b><small>${c.time}</small></div><div class="itemBottom"><p style="color:${c.type==='missed'?'#ef4444':'var(--muted)'}">${c.type==='missed'?'Missed':'Outgoing'} • ${c.callType||'Voice'} Call</p></div></div><button class="iconBtn" onclick="event.stopPropagation();startCallFrom('${c.name}','${c.phone}')">📞</button></div>`).join(''):`<div class="empty"><span>📞</span><b>No Calls Yet</b><p>No calls yet</p></div>`);
 return;
 }
 let arr=[];
@@ -425,7 +429,7 @@ if(currentFilter==='groups') arr=arr.filter(x=>x.type==='group');
 if(currentFilter==='online') arr=arr.filter(x=>x.online);
 if(q) arr=arr.filter(x=>x.name.toLowerCase().includes(q)||(x.last||'').toLowerCase().includes(q));
 if(arr.length===0){
-list.innerHTML=`<div class="empty"><span>💬</span><b>No ${currentTab==='groups'?'Groups':'Chats'} Yet</b><p>${currentTab==='groups'?'Group banao apne doston ke saath':'Kisi ko Name se Add karo, phir chat start hogi'}</p><br><button class="btnPill" onclick="openModal('addUserModal')">＋ Add User By Name</button></div>`;
+list.innerHTML=`<div class="empty"><span>💬</span><b>No ${currentTab==='groups'?'Groups':'Chats'} Yet</b><p>${currentTab==='groups'?'Create a group with your friends':'Add someone by name, then start chatting'}</p><br><button class="btnPill" onclick="openModal('addUserModal')">＋ Add User By Name</button></div>`;
 return;
 }
 list.innerHTML=arr.map(it=>`<div class="item ${currentChatId===it.chatId?'active':''}" onclick="openChat('${it.chatId}','${it.type}','${it.phone||''}','${encodeURIComponent(it.name)}')">
@@ -437,28 +441,28 @@ document.getElementById('totalUnread').textContent=total;
 async function searchUsersByName(){
 let q=document.getElementById('addUserSearch').value.trim().toLowerCase();
 let box=document.getElementById('addUserResults');
-if(q.length<2){box.innerHTML=`<p style="font-size:13px;color:var(--muted);text-align:center;padding:20px">Naam likho — Firebase se user dhoond ke aayega.</p>`;return;}
-box.innerHTML=`<p style="text-align:center;padding:20px">🔍 Searching Firebase...</p>`;
+if(q.length<2){box.innerHTML=`<p style="font-size:13px;color:var(--muted);text-align:center;padding:20px">Type a name to search for a user.</p>`;return;}
+box.innerHTML=`<p style="text-align:center;padding:20px">Searching...</p>`;
 try{
 let snap=await db.collection('users').get();
 let found=[];
 snap.forEach(doc=>{let u=doc.data();if(u.phone===currentUser.phone) return;if(u.name.toLowerCase().includes(q)||u.phone.includes(q)){found.push(u);}});
-if(found.length===0){box.innerHTML=`<div class="empty"><span>😕</span><b>Koi user nahi mila</b><p>"${q}" naam se koi account nahi hai.<br>Dusre phone se pehle account banao.</p></div>`;return;}
+if(found.length===0){box.innerHTML=`<div class="empty"><span>😕</span><b>No user found</b><p>No account found with name "${q}".<br>Ask them to create an account first.</p></div>`;return;}
 box.innerHTML=found.map(u=>{
 let already=contacts.find(c=>c.phone===u.phone);
 return `<div class="contactRow"><div class="avatar" style="background:${getColor(u.name)}">${u.avatar||u.name[0]}</div><div style="flex:1"><b>${u.name}</b><div style="font-size:12px;color:var(--muted)">${u.phone} • ${u.bio||''}</div></div>${already?`<button class="btnGhost" onclick="openChatFromUser('${u.phone}','${encodeURIComponent(u.name)}')">Chat →</button>`:`<button class="btnPill" onclick="addUserToContacts('${u.phone}','${encodeURIComponent(u.name)}','${u.avatar||''}')">＋ Add</button>`}</div>`;
 }).join('');
-}catch(e){box.innerHTML=`<p style="color:red;text-align:center">Firebase Error: ${e.message}<br>Rules check karo</p>`;}
+}catch(e){box.innerHTML=`<p style="color:red;text-align:center">Error: ${e.message}</p>`;}
 }
 async function addUserToContacts(phone,nameEnc,avatar){
 let name=decodeURIComponent(nameEnc);
-if(contacts.find(c=>c.phone===phone)){toast('Pehle se added hai');return;}
+if(contacts.find(c=>c.phone===phone)){toast('Already added');return;}
 let chatId=getChatId(phone);
-let newContact={phone,name,avatar:avatar||name[0].toUpperCase(),chatId,type:'chat',last:'Say hi 👋',time:'Now',unread:0,online:true};
+let newContact={phone,name,avatar:avatar||name[0].toUpperCase(),chatId,type:'chat',last:'Say hi',time:'Now',unread:0,online:true};
 contacts.unshift(newContact);saveLocal();
 try{await db.collection('users').doc(currentUser.phone).collection('myContacts').doc(phone).set(newContact);}catch(e){console.log(e);}
-try{await db.collection('users').doc(phone).collection('myContacts').doc(currentUser.phone).set({phone:currentUser.phone,name:currentUser.name,avatar:currentUser.avatar,chatId,type:'chat',last:'Say hi 👋',time:'Now',unread:0,online:true});}catch(e){}
-closeModal('addUserModal');renderList();openChat(chatId,'chat',phone,nameEnc);toast('✅ '+name+' added! Ab chat karo 🔥');
+try{await db.collection('users').doc(phone).collection('myContacts').doc(currentUser.phone).set({phone:currentUser.phone,name:currentUser.name,avatar:currentUser.avatar,chatId,type:'chat',last:'Say hi',time:'Now',unread:0,online:true});}catch(e){}
+closeModal('addUserModal');renderList();openChat(chatId,'chat',phone,nameEnc);toast(name+' added. Start chatting.');
 }
 function openChatFromUser(phone,nameEnc){closeModal('addUserModal');let c=contacts.find(x=>x.phone===phone);if(c) openChat(c.chatId,'chat',phone,nameEnc);}
 function openChat(chatId,type,phone='',nameEnc=''){
@@ -485,7 +489,7 @@ renderMessages(msgs);
 }
 function renderMessages(msgs){
 let box=document.getElementById('msgsBox');
-if(!msgs || msgs.length===0){box.innerHTML=`<div class="dateSep"><span>Today</span></div><div style="text-align:center;color:var(--muted);padding:20px">👋 Say hi to start conversation<br><span style="font-size:12px">Firebase Real-time • End-to-end encrypted</span></div>`;return;}
+if(!msgs || msgs.length===0){box.innerHTML=`<div class="dateSep"><span>Today</span></div><div style="text-align:center;color:var(--muted);padding:20px">Say hi to start the conversation<br><span style="font-size:12px">Messages are end-to-end encrypted</span></div>`;return;}
 box.innerHTML=`<div class="dateSep"><span>Today</span></div>`+msgs.map(m=>{
 let isMe=m.senderPhone===currentUser.phone;
 let img=m.image?`<img class="msgImg" src="${m.image}">`:'';
@@ -501,53 +505,53 @@ inp.value='';
 try{
 await db.collection('chats').doc(currentChatId).collection('messages').add({text,senderPhone:currentUser.phone,senderName:currentUser.name,time,createdAt:Date.now()});
 if(currentChat){currentChat.last='You: '+text;currentChat.time=time;saveLocal();renderList();}
-}catch(e){toast('❌ Send failed: '+e.message);}
+}catch(e){toast('Send failed: '+e.message);}
 }
 function addEmoji(e){document.getElementById('msgInput').value+=e;document.getElementById('msgInput').focus();}
 function toggleEmoji(){document.getElementById('emojiRow').classList.toggle('hidden');}
 async function sendImage(){
-if(!currentChatId){toast('Pehle chat select karo');return;}
+if(!currentChatId){toast('Select a chat first');return;}
 let imgs=['https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=400','https://images.unsplash.com/photo-1517841905240-472988babdf9?w=400','https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400'];
 let img=imgs[Math.floor(Math.random()*imgs.length)];
 let time=new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
-try{await db.collection('chats').doc(currentChatId).collection('messages').add({text:'📸 Photo',image:img,senderPhone:currentUser.phone,senderName:currentUser.name,time,createdAt:Date.now()});toast('📸 Photo sent!');}catch(e){toast(e.message);}
+try{await db.collection('chats').doc(currentChatId).collection('messages').add({text:'Photo',image:img,senderPhone:currentUser.phone,senderName:currentUser.name,time,createdAt:Date.now()});toast('Photo sent');}catch(e){toast(e.message);}
 }
 async function sendVoice(){
-if(!currentChatId){toast('Pehle chat select karo');return;}
+if(!currentChatId){toast('Select a chat first');return;}
 let time=new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
-try{await db.collection('chats').doc(currentChatId).collection('messages').add({text:'🎤 Voice Message (0:12) ▓▓▓▓▓▓▓▓░░ ▶️',senderPhone:currentUser.phone,senderName:currentUser.name,time,createdAt:Date.now()});toast('🎤 Voice note sent!');}catch(e){toast(e.message);}
+try{await db.collection('chats').doc(currentChatId).collection('messages').add({text:'Voice Message (0:12) ▶️',senderPhone:currentUser.phone,senderName:currentUser.name,time,createdAt:Date.now()});toast('Voice note sent');}catch(e){toast(e.message);}
 }
 async function clearChat(){if(!currentChatId)return;if(confirm('Clear all messages?')){let snap=await db.collection('chats').doc(currentChatId).collection('messages').get();let batch=db.batch();snap.forEach(d=>batch.delete(d.ref));await batch.commit();toast('Chat cleared');}}
-function muteChat(){if(!currentChat)return;currentChat.muted=!currentChat.muted;saveLocal();renderList();toast(currentChat.muted?'🔕 Muted':'🔔 Unmuted');}
-function blockChat(){if(!currentChat)return;currentChat.blocked=!currentChat.blocked;saveLocal();renderList();toast(currentChat.blocked?'🚫 Blocked':'Unblocked');}
+function muteChat(){if(!currentChat)return;currentChat.muted=!currentChat.muted;saveLocal();renderList();toast(currentChat.muted?'Muted':'Unmuted');}
+function blockChat(){if(!currentChat)return;currentChat.blocked=!currentChat.blocked;saveLocal();renderList();toast(currentChat.blocked?'Blocked':'Unblocked');}
 function deleteChat(){if(!currentChatId)return;if(confirm('Delete this chat?')){contacts=contacts.filter(c=>c.chatId!==currentChatId);groups=groups.filter(g=>g.chatId!==currentChatId);saveLocal();renderList();closeChat();toast('Chat deleted');}}
 function toggleChatMenu(){document.getElementById('chatMenu').classList.toggle('hidden');}
-function openModal(id){document.getElementById(id).classList.add('open');if(id==='newGroupModal')renderGroupMembers();if(id==='addUserModal'){document.getElementById('addUserSearch').value='';document.getElementById('addUserResults').innerHTML=`<p style="font-size:13px;color:var(--muted);text-align:center;padding:20px">Naam likho — Firebase se user dhoond ke aayega.</p>`;}}
+function openModal(id){document.getElementById(id).classList.add('open');if(id==='newGroupModal')renderGroupMembers();if(id==='addUserModal'){document.getElementById('addUserSearch').value='';document.getElementById('addUserResults').innerHTML=`<p style="font-size:13px;color:var(--muted);text-align:center;padding:20px">Type a name to search for a user.</p>`;}}
 function closeModal(id){document.getElementById(id).classList.remove('open');}
 function renderGroupMembers(){
 let box=document.getElementById('groupMembers');
-if(contacts.length===0){box.innerHTML=`<p style="color:var(--muted);font-size:13px">Pehle kisi ko Add By Name se add karo, phir group banao.</p>`;return;}
+if(contacts.length===0){box.innerHTML=`<p style="color:var(--muted);font-size:13px">Add someone by name first, then create a group.</p>`;return;}
 box.innerHTML=contacts.map(c=>`<div class="contactRow ${selectedGroupMembers.has(c.phone)?'selected':''}" onclick="toggleMember('${c.phone}',this)"><div class="avatar" style="background:${getColor(c.name)}">${c.avatar||c.name[0]}</div><div><b>${c.name}</b><div style="font-size:12px;color:var(--muted)">${c.phone}</div></div><div class="check">✓</div></div>`).join('');
 }
 function toggleMember(phone,el){if(selectedGroupMembers.has(phone)){selectedGroupMembers.delete(phone);el.classList.remove('selected');}else{selectedGroupMembers.add(phone);el.classList.add('selected');}}
 async function createGroup(){
 let name=document.getElementById('groupName').value.trim();
-if(!name){toast('Group name likho');return;}
-if(selectedGroupMembers.size===0){toast('Members select karo');return;}
+if(!name){toast('Enter group name');return;}
+if(selectedGroupMembers.size===0){toast('Select members');return;}
 let chatId='group_'+Date.now();
-let grp={chatId,name:name+' 👥',phone:'',avatar:'👥',type:'group',members:selectedGroupMembers.size+1,last:'Group created 🎉',time:'Now',unread:0,online:false};
+let grp={chatId,name:name+' 👥',phone:'',avatar:'👥',type:'group',members:selectedGroupMembers.size+1,last:'Group created',time:'Now',unread:0,online:false};
 groups.unshift(grp);saveLocal();
-try{await db.collection('chats').doc(chatId).collection('messages').add({text:'Group created 🎉 Welcome to '+name,senderPhone:'system',senderName:'TalkWave',time:'Now',createdAt:Date.now()});}catch(e){}
+try{await db.collection('chats').doc(chatId).collection('messages').add({text:'Group created. Welcome to '+name,senderPhone:'system',senderName:'TalkWave',time:'Now',createdAt:Date.now()});}catch(e){}
 selectedGroupMembers.clear();document.getElementById('groupName').value='';
-closeModal('newGroupModal');setTab('groups',document.querySelector('[data-nav=groups]'));openChat(chatId,'group','','');toast('🎉 Group created: '+name);
+closeModal('newGroupModal');setTab('groups',document.querySelector('[data-nav=groups]'));openChat(chatId,'group','','');toast('Group created: '+name);
 }
 async function addStatus(){
 let txt=document.getElementById('statusText').value.trim();
-if(!txt){toast('Status likho');return;}
+if(!txt){toast('Enter status text');return;}
 let s={id:'s'+Date.now(),name:currentUser.name,avatar:currentUser.avatar,emoji:'🌊',text:txt,time:'Just now',views:0};
 statusList.unshift(s);saveLocal();
 try{await db.collection('status').add({...s,createdAt:Date.now()});}catch(e){}
-closeModal('newStatusModal');document.getElementById('statusText').value='';setTab('status',document.querySelector('[data-nav=status]'));toast('✅ Status posted!');
+closeModal('newStatusModal');document.getElementById('statusText').value='';setTab('status',document.querySelector('[data-nav=status]'));toast('Status posted');
 }
 function openStatus(id){
 let s=statusList.find(x=>x.id===id);if(!s) return;
@@ -561,7 +565,7 @@ statusTimer=setInterval(()=>{w+=2;bar.style.width=w+'%';if(w>=100){clearInterval
 function closeStatusViewer(){document.getElementById('statusViewer').classList.remove('open');clearInterval(statusTimer);}
 function replyStatus(){let v=document.getElementById('statusReply').value.trim();if(!v) return;toast('Reply sent: '+v);document.getElementById('statusReply').value='';closeStatusViewer();}
 function startCall(type){
-if(!currentChat){toast('Pehle chat select karo');return;}
+if(!currentChat){toast('Select a chat first');return;}
 startCallFrom(currentChat.name,currentChat.phone||'',type);
 }
 function startCallFrom(name,phone,type='voice'){
@@ -577,26 +581,26 @@ callInterval=setInterval(()=>{callSec++;let m=String(Math.floor(callSec/60)).pad
 let c={name,phone,avatar:name[0].toUpperCase(),type:'outgoing',callType:type,time:'Just now'};
 callsLog.unshift(c);saveLocal();
 }
-function toggleMute(){isMuted=!isMuted;document.getElementById('muteBtn').classList.toggle('active',isMuted);toast(isMuted?'🔇 Muted':'🎤 Unmuted');}
-function toggleVideo(){isVideo=!isVideo;document.getElementById('videoBtn').classList.toggle('active',isVideo);toast(isVideo?'📹 Video On':'📹 Video Off');}
-function toggleSpeaker(){toast('🔊 Speaker toggled');}
-function endCall(){clearInterval(callInterval);document.getElementById('callScreen').classList.remove('open');toast('📞 Call ended • '+document.getElementById('callTimer').textContent);renderList();}
+function toggleMute(){isMuted=!isMuted;document.getElementById('muteBtn').classList.toggle('active',isMuted);toast(isMuted?'Muted':'Unmuted');}
+function toggleVideo(){isVideo=!isVideo;document.getElementById('videoBtn').classList.toggle('active',isVideo);toast(isVideo?'Video On':'Video Off');}
+function toggleSpeaker(){toast('Speaker toggled');}
+function endCall(){clearInterval(callInterval);document.getElementById('callScreen').classList.remove('open');toast('Call ended • '+document.getElementById('callTimer').textContent);renderList();}
 async function saveProfile(){
 let name=document.getElementById('editName').value.trim();let bio=document.getElementById('editBio').value.trim();
-if(!name){toast('Naam likho');return;}
+if(!name){toast('Enter name');return;}
 currentUser.name=name;currentUser.bio=bio;currentUser.avatar=name[0].toUpperCase();
 localStorage.setItem('talkwave_user',JSON.stringify(currentUser));
 try{await db.collection('users').doc(currentUser.phone).update({name,bio,avatar:currentUser.avatar});}catch(e){}
-applyUserToUI();closeModal('editProfileModal');toast('✅ Profile updated!');
+applyUserToUI();closeModal('editProfileModal');toast('Profile updated');
 }
 function changeAvatar(){
 let emojis=['😎','🔥','🌊','👑','💎','🚀','😂','❤️'];let e=emojis[Math.floor(Math.random()*emojis.length)];
-document.getElementById('profileAvatarBig').textContent=e;document.getElementById('sideAvatar').textContent=e;currentUser.avatar=e;localStorage.setItem('talkwave_user',JSON.stringify(currentUser));toast('🖼️ Photo changed: '+e);
+document.getElementById('profileAvatarBig').textContent=e;document.getElementById('sideAvatar').textContent=e;currentUser.avatar=e;localStorage.setItem('talkwave_user',JSON.stringify(currentUser));toast('Photo changed');
 }
-function toggleDark(){document.body.classList.toggle('dark');let on=document.body.classList.contains('dark');document.getElementById('darkSwitch').classList.toggle('on',on);localStorage.setItem('talkwave_dark',on?'1':'0');toast(on?'🌙 Dark Mode On':'☀️ Light Mode On');}
+function toggleDark(){document.body.classList.toggle('dark');let on=document.body.classList.contains('dark');document.getElementById('darkSwitch').classList.toggle('on',on);localStorage.setItem('talkwave_dark',on?'1':'0');toast(on?'Dark Mode On':'Light Mode On');}
 function toggleSetting(el,name){let sw=el.querySelector('.switch');if(sw){sw.classList.toggle('on');toast(name+': '+(sw.classList.contains('on')?'ON':'OFF'));}}
-function setWallpaper(val){document.querySelector('.msgs').style.background=val;document.querySelector('.chatArea').style.background=val;closeModal('wallpaperModal');toast('🎨 Wallpaper changed!');}
-function showFirebaseInfo(){toast('🔥 Firebase: zapp-5733f • Connected • '+contacts.length+' contacts');}
+function setWallpaper(val){document.querySelector('.msgs').style.background=val;document.querySelector('.chatArea').style.background=val;closeModal('wallpaperModal');toast('Wallpaper changed');}
+function showAppInfo(){toast('TalkWave v3.0 • Real-time chat • All features working');}
 if(localStorage.getItem('talkwave_dark')==='1'){document.body.classList.add('dark');setTimeout(()=>document.getElementById('darkSwitch').classList.add('on'),100);}
 if(currentUser){document.getElementById('authScreen').style.display='none';document.getElementById('app').style.display='block';applyUserToUI();loadMyContactsFromFirebase();}
 renderList();
